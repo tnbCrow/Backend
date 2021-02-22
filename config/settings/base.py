@@ -1,12 +1,9 @@
 import os
 from decouple import config
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
@@ -29,7 +26,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'djoser',
-    
+
+    'v1.users.apps.UsersConfig'
 ]
 
 MIDDLEWARE = [
@@ -74,7 +72,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -101,11 +98,20 @@ REST_FRAMEWORK = {
 
 DJOSER = {
     'SEND_ACTIVATION_EMAIL': True,
-    'LOGIN_FIELD': 'email',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
 }
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+    'UPDATE_LAST_LOGIN': True,
+    'USER_ID_FIELD': 'uuid',
+}
+
+AUTH_USER_MODEL = 'users.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
