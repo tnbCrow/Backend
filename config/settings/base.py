@@ -105,8 +105,8 @@ DJOSER = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
     'UPDATE_LAST_LOGIN': True,
     'USER_ID_FIELD': 'uuid',
     'USER_AUTHENTICATION_RULE': 'v1.third_party.rest_framework_simplejwt.authentication.custom_user_authentication_rule'
