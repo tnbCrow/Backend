@@ -26,3 +26,6 @@ class Wallet(models.Model):
 
     account_number = models.CharField(blank=True, max_length=VERIFY_KEY_LENGTH)
     is_primary = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.owner.username}: {self.account_number}"
