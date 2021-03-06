@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
 
-    'v1.users.apps.UsersConfig'
+    'v1.users.apps.UsersConfig',
+    'v1.trades.apps.TradesConfig'
 ]
 
 MIDDLEWARE = [
