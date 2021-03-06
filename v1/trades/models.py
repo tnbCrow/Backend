@@ -57,6 +57,7 @@ class TradePost(models.Model):
     def __str__(self):
         return f'{self.uuid}: {self.is_active}'
 
+
 class TradeRequest(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
 
