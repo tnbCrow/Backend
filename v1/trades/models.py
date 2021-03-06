@@ -4,7 +4,6 @@ from django.db import models
 
 from v1.users.models import User
 
-from thenewboston.constants.network import VERIFY_KEY_LENGTH
 
 class Exchange(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
@@ -42,14 +41,14 @@ class TradePost(models.Model):
 
     exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
     margin = models.IntegerField(default=100)
-    final_price = models.IntegerField()
+    price = models.IntegerField()
 
     min_transaction = models.IntegerField()
     max_transaction = models.IntegerField()
 
     is_active = models.BooleanField(default=False)
     terms_of_trade = models.TextField()
-
+    broadcast_trade = models.BooleanField(default=False)
     min_reputation = models.IntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -57,3 +56,16 @@ class TradePost(models.Model):
 
     def __str__(self):
         return f'{self.uuid}: {self.is_active}'
+
+class TradeRequest(models.Model):
+    uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
+
+    post = models.ForeignKey(TradePost, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_accepted = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.post}: {self.is_accepted}'
