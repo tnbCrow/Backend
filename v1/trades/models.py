@@ -91,8 +91,8 @@ class ActiveTrade(models.Model):
 class CompletedTrade(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
 
-    seller = models.ForeignKey(User, on_delete=models.CASCADE)
-    buyer = models.ForeignKey(User, on_delete=models.CASCADE)
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='seller')
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='buyer')
 
     amount = models.IntegerField()
 
