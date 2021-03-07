@@ -63,7 +63,7 @@ class TradeRequest(models.Model):
 
     post = models.ForeignKey(TradePost, on_delete=models.CASCADE)
     initiator = models.ForeignKey(User, on_delete=models.CASCADE)
-    is_accepted = models.BooleanField(default=False)
+    is_accepted = models.BooleanField(default=False)             # checks if post owner has accepted the trade request
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -78,11 +78,26 @@ class ActiveTrade(models.Model):
     post = models.ForeignKey(TradePost, on_delete=models.CASCADE)
     initiator = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    initiator_accepted = models.BooleanField(default=False)
-    owner_accepted = models.BooleanField(default=False)
+    initiator_confirmed = models.BooleanField(default=False)
+    owner_confirmed = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.post
+
+
+class CompletedTrade(models.Model):
+    uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
+
+    seller = models.ForeignKey(User, on_delete=models.CASCADE)
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    amount = models.IntegerField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.seller} - {self.buyer}: {self.amount}'
