@@ -24,32 +24,27 @@ class PaymentMethod(models.Model):
 
 # Create your models here.
 class TradePost(models.Model):
-    BUY = 0
-    SELL = 1
+    BUYER = 0
+    SELLER = 1
 
-    TRADE_CHOICES = [
-        (BUY, 'Buy'),
-        (SELL, 'Sell')
+    ROLE_CHOICES = [
+        (BUYER, 'Buyer'),
+        (SELLER, 'Seller')
     ]
 
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
 
-    trade_type = models.IntegerField(choices=TRADE_CHOICES)
-
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner_role = models.IntegerField(choices=ROLE_CHOICES)
+
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
+    amount = models.IntegerField()
 
-    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
-    margin = models.IntegerField(default=100)
-    price = models.IntegerField()
-
-    min_transaction = models.IntegerField()
-    max_transaction = models.IntegerField()
-
-    is_active = models.BooleanField(default=False)
     terms_of_trade = models.TextField()
-    broadcast_trade = models.BooleanField(default=False)
     min_reputation = models.IntegerField()
+
+    broadcast_trade = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
