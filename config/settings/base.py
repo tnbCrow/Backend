@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
 
+    'v1.constants.apps.ConstantsConfig',
     'v1.users.apps.UsersConfig',
     'v1.trades.apps.TradesConfig'
 ]
