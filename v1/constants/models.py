@@ -33,6 +33,9 @@ class Currency(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
     name = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name_plural = "Currencies"
+
     def __str__(self):
         return f'{self.name}'
 
