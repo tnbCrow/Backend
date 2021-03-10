@@ -57,6 +57,8 @@ class Country(models.Model):
     alpha_two_code = models.CharField(max_length=2)
     alpha_three_code = models.CharField(max_length=3)
 
+    class Meta:
+        verbose_name_plural = "Countries"
+
     def __str__(self):
         return f'{self.alpha_two_code}: {self.name}'
-        
