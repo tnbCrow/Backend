@@ -3,7 +3,7 @@ from uuid import uuid4
 from django.db import models
 
 from v1.users.models import User
-from v1.constants.models import TransactionType, Currency, PaymentMethod
+from v1.constants.models import TransactionType, Currency, PaymentMethod, Exchange
 
 
 # Create your models here.
@@ -25,6 +25,10 @@ class TradePost(models.Model):
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
     
+    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
+    margin = models.IntegerField()
+    rate = models.IntegerField()
+
     amount = models.IntegerField()
 
     terms_of_trade = models.TextField()
