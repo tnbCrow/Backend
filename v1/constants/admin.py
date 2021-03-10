@@ -3,4 +3,5 @@ from . import models
 
 # Register your models here.
 admin.site.register(models.Exchange)
-admin.site.register(models.PaymentMethod)
+admin.site.register(models.TransactionType)
+admin.site.register(models.TransactionDetail)

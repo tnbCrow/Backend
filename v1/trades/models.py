@@ -3,7 +3,7 @@ from uuid import uuid4
 from django.db import models
 
 from v1.users.models import User
-from v1.constants.models import PaymentMethod
+from v1.constants.models import TransactionType
 
 
 # Create your models here.
@@ -21,7 +21,7 @@ class TradePost(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     owner_role = models.IntegerField(choices=ROLE_CHOICES)
 
-    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
+    transaction_type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     amount = models.IntegerField()
 
     terms_of_trade = models.TextField()
@@ -64,7 +64,7 @@ class ActiveTrade(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.post
+        return f'{self.post}'
 
 
 class CompletedTrade(models.Model):
