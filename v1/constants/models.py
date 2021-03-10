@@ -14,7 +14,7 @@ class Exchange(models.Model):
 
 class TransactionType(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.name
@@ -24,6 +24,9 @@ class PaymentMethod(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
     type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+
+    class Meta:
+        unique_together = ['type', 'name']
 
     def __str__(self):
         return f'{self.type.name}: {self.name}'
