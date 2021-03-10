@@ -5,3 +5,4 @@ from . import models
 admin.site.register(models.Exchange)
 admin.site.register(models.TransactionType)
 admin.site.register(models.Currency)
+admin.site.register(models.TransactionFee)

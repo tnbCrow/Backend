@@ -26,3 +26,11 @@ class Currency(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+
+class TransactionFee(models.Model):
+    name = models.CharField(max_length=255)
+    charge = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.name}: {self.charge}'
