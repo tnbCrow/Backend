@@ -25,8 +25,6 @@ class PaymentMethod(models.Model):
     type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
 
-    unique_together = ['type', 'name']
-
     def __str__(self):
         return f'{self.type.name}: {self.name}'
 
