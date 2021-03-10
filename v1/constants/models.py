@@ -5,7 +5,7 @@ from django.db import models
 
 class Exchange(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     price = models.IntegerField()
 
     def __str__(self):
@@ -34,7 +34,7 @@ class PaymentMethod(models.Model):
 
 class Currency(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
     class Meta:
         verbose_name_plural = "Currencies"
@@ -44,7 +44,7 @@ class Currency(models.Model):
 
 
 class TransactionFee(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     charge = models.IntegerField()
 
     def __str__(self):
