@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Country, TransactionType, PaymentMethod
+from .models import Country, TransactionType, PaymentMethod, Exchange, Currency
 
 
 class CountrySerializer(serializers.ModelSerializer):
@@ -14,7 +14,7 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PaymentMethod
-        fields = ('__all__')
+        fields = ('uuid', 'name')
 
 
 class TransactionTypeSerializer(serializers.ModelSerializer):
@@ -24,3 +24,17 @@ class TransactionTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionType
         fields = ('uuid', 'name', 'payment_method')
+
+
+class ExchangeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Exchange
+        fields = ('__all__')
+
+
+class CurrencySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Currency
+        fields = ('__all__')
