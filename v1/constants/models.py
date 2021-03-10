@@ -49,3 +49,14 @@ class TransactionFee(models.Model):
 
     def __str__(self):
         return f'{self.name}: {self.charge}'
+
+
+class Country(models.Model):
+    uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
+    name = models.CharField(max_length=255, unique=True)
+    alpha_two_code = models.CharField(max_length=2)
+    alpha_three_code = models.CharField(max_length=3)
+
+    def __str__(self):
+        return f'{self.alpha_two_code}: {self.name}'
+        
