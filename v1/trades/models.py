@@ -3,7 +3,7 @@ from uuid import uuid4
 from django.db import models
 
 from v1.users.models import User
-from v1.constants.models import TransactionType
+from v1.constants.models import TransactionType, Currency
 
 
 # Create your models here.
@@ -22,6 +22,8 @@ class TradePost(models.Model):
     owner_role = models.IntegerField(choices=ROLE_CHOICES)
 
     transaction_type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
+
     amount = models.IntegerField()
 
     terms_of_trade = models.TextField()

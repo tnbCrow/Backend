@@ -20,10 +20,9 @@ class TransactionType(models.Model):
         return self.name
 
 
-class TransactionDetail(models.Model):
+class Currency(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
-    type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.type.name}: {self.name}'
+        return f'{self.name}'
