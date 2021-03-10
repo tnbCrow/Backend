@@ -11,6 +11,9 @@ class User(AbstractUser):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
     email = models.EmailField(unique=True)
 
+    first_name = None
+    last_name = None
+
     memo = models.CharField(max_length=44, default="tnbcrow-"+ str(uuid4), unique=True,  editable=False)
     balance = models.PositiveBigIntegerField(default=0)
     reputation = models.IntegerField(default=100)

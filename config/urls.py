@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
 
+admin.site.index_title = 'Admin'
+admin.site.site_header = 'tnbCrow'
+admin.site.site_title = 'tnbCrow'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
