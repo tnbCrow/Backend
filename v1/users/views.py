@@ -2,13 +2,12 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Wallet
-from .serializers import WalletSerializer
+from .serializers import WalletCreateSerializer, WalletUpdateSerializer
+
 
 # Create your views here.
 class WalletViewSet(viewsets.ModelViewSet):
 
-    queryset = Wallet.objects.all()
-    serializer_class = WalletSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -16,9 +15,13 @@ class WalletViewSet(viewsets.ModelViewSet):
         This view should return a list of all the wallets
         for the currently authenticated user.
         """
-        queryset = self.queryset
-        query_set = queryset.filter(owner=self.request.user)
-        return query_set
+        return Wallet.objects.filter(owner=self.request.user)
+    
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return WalletCreateSerializer
+        else:
+            return WalletUpdateSerializer
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

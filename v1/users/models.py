@@ -32,4 +32,4 @@ class Wallet(CreatedModified):
     is_primary = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.owner.username}: {self.account_number}"
+        return f"{self.owner.username}: {self.account_number}: {self.is_primary}"
