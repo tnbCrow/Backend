@@ -4,7 +4,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
-from thenewboston.constants.network import VERIFY_KEY_LENGTH
+from v1.third_party.tnbCrow.constants import VERIFY_KEY_LENGTH
+from v1.third_party.tnbCrow.models import CreatedModified
 
 # Create your models here.
 class User(AbstractUser):
@@ -22,7 +23,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username']
 
 
-class Wallet(models.Model):
+class Wallet(CreatedModified):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
