@@ -18,7 +18,7 @@ class WalletViewSet(viewsets.ModelViewSet):
         return Wallet.objects.filter(owner=self.request.user)
 
     def get_serializer_class(self):
-        if self.request.method == 'POST':
+        if self.action == 'create':
             return WalletCreateSerializer
         else:
             return WalletUpdateSerializer
