@@ -56,6 +56,7 @@ class Country(models.Model):
     name = models.CharField(max_length=255, unique=True)
     alpha_two_code = models.CharField(max_length=2)
     alpha_three_code = models.CharField(max_length=3)
+    phone_code = models.CharField(max_length=6)
 
     class Meta:
         verbose_name_plural = "Countries"

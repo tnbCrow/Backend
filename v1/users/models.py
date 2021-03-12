@@ -4,7 +4,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
-from thenewboston.constants.network import VERIFY_KEY_LENGTH
+from v1.third_party.tnbCrow.constants import VERIFY_KEY_LENGTH
+from v1.third_party.tnbCrow.models import CreatedModified
 
 # Create your models here.
 class User(AbstractUser):
@@ -22,13 +23,13 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username']
 
 
-class Wallet(models.Model):
+class Wallet(CreatedModified):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    account_number = models.CharField(blank=True, max_length=VERIFY_KEY_LENGTH)
+    account_number = models.CharField(max_length=VERIFY_KEY_LENGTH)
     is_primary = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.owner.username}: {self.account_number}"
+        return f"{self.owner.username}: {self.account_number}: {self.is_primary}"
