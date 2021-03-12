@@ -1,7 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from v1.third_party.tnbCrow.permissions import IsOwner
 from .models import Wallet
 from .serializers import WalletCreateSerializer, WalletUpdateSerializer
 
