@@ -28,7 +28,7 @@ class Wallet(CreatedModified):
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    account_number = models.CharField(blank=True, max_length=VERIFY_KEY_LENGTH)
+    account_number = models.CharField(max_length=VERIFY_KEY_LENGTH)
     is_primary = models.BooleanField(default=False)
 
     def __str__(self):
