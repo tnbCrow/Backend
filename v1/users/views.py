@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
+from v1.third_party.tnbCrow.permissions import IsOwner
 from .models import Wallet
 from .serializers import WalletCreateSerializer, WalletUpdateSerializer
 
@@ -16,7 +17,7 @@ class WalletViewSet(viewsets.ModelViewSet):
         for the currently authenticated user.
         """
         return Wallet.objects.filter(owner=self.request.user)
-    
+
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return WalletCreateSerializer
