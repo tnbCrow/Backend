@@ -4,6 +4,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from v1.constants.urls import router as constants_router
+from v1.trades.urls import router as trades_router
 from v1.users.urls import router as users_router
 
 admin.site.index_title = 'Admin'
@@ -19,4 +20,5 @@ urlpatterns = [
 router = DefaultRouter(trailing_slash=False)
 router.registry.extend(constants_router.registry)
 router.registry.extend(users_router.registry)
+router.registry.extend(trades_router.registry)
 urlpatterns += router.urls
