@@ -89,7 +89,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-
+settings.ini
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -108,3 +108,4 @@ static_collected
 
 # Exclude machine-specific vs code settings
 .vscode/settings.json
+.vscode
