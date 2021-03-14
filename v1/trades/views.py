@@ -38,7 +38,7 @@ class TradeRequestViewSet(viewsets.ModelViewSet):
         for the currently authenticated user.
         """
         if self.request.method in SAFE_METHODS:
-            return TradeRequest.objects.filter(Q(initiator=self.request.user)|Q(post__owner=self.request.user))
+            return TradeRequest.objects.filter(Q(initiator=self.request.user, status=0)|Q(post__owner=self.request.user, status=0))
         else:
             return TradeRequest.objects.all()
 
