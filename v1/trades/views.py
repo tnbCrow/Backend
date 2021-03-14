@@ -6,8 +6,8 @@ from django.db.models import Q
 from v1.constants.models import Exchange
 from v1.third_party.tnbCrow.permissions import IsOwner
 
-from .models import TradePost, TradeRequest
-from .serializers import TradePostSerializer, TradeRequestCreateSerializer, TradeRequestUpdateSerializer
+from .models import TradePost, TradeRequest, ActiveTrade
+from .serializers import TradePostSerializer, TradeRequestCreateSerializer, TradeRequestUpdateSerializer, ActiveTradeSerializer
 from .permissions import TradeRequestInitiator, TradeRequestPostOwner
 
 # Create your views here.
@@ -58,3 +58,17 @@ class TradeRequestViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(initiator=self.request.user)
+
+class ActiveTradeViewSet(viewsets.ModelViewSet):
+
+    queryset = ActiveTrade.objects.all()
+    serializer_class = ActiveTradeSerializer
+
+    def get_permissions(self):
+        data = self.request.data
+        if 'initiator_confirmed' in data and not 'owner_confirmed' in data:
+            return [TradeRequestInitiator(), ]
+        elif 'owner_confirmed' in data and not 'initiator_confirmed' in data:
+            return [TradeRequestPostOwner(), ]
+        else:
+            return [IsAuthenticated(), ]
