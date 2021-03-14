@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import TradePost
+from .models import TradePost, TradeRequest
 
 class TradePostSerializer(serializers.ModelSerializer):
 
@@ -11,3 +11,19 @@ class TradePostSerializer(serializers.ModelSerializer):
                 'rate', 'amount', 'terms_of_trade', 'min_reputation',\
                 'broadcast_trade', 'is_active', 'created_at', 'updated_at')
         read_only_fields = 'created_at', 'updated_at', 'rate',
+
+
+class TradeRequestCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TradeRequest
+        fields = ('uuid', 'post', 'initiator', 'created_at', 'updated_at')
+        read_only_fields = 'created_at', 'updated_at'
+
+
+class TradeRequestUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TradeRequest
+        fields = ('uuid', 'is_accepted', 'created_at', 'updated_at')
+        read_only_fields = 'created_at', 'updated_at'

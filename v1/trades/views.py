@@ -4,8 +4,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, SAFE_METHODS
 from v1.constants.models import Exchange
 from v1.third_party.tnbCrow.permissions import IsOwner
 
-from .models import TradePost
-from .serializers import TradePostSerializer
+from .models import TradePost, TradeRequest
+from .serializers import TradePostSerializer, TradeRequestCreateSerializer, TradeRequestUpdateSerializer
 
 # Create your views here.
 class TradePostViewSet(viewsets.ModelViewSet):
@@ -25,3 +25,9 @@ class TradePostViewSet(viewsets.ModelViewSet):
         exchange_price = Exchange.objects.get(uuid=self.request.data['exchange']).price
         rate = exchange_price * (100+int(self.request.data['margin']))/100
         serializer.save(owner=self.request.user, rate=rate)
+
+
+class TradeRequestViewSet(viewsets.ModelViewSet):
+
+    queryset = TradeRequest.objects.all()
+    serializer_class = TradeRequestCreateSerializer
