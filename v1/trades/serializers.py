@@ -17,13 +17,13 @@ class TradeRequestCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradeRequest
-        fields = ('uuid', 'post', 'initiator', 'created_at', 'updated_at')
-        read_only_fields = 'created_at', 'updated_at'
+        fields = ('uuid', 'post', 'status', 'created_at', 'updated_at')
+        read_only_fields = 'created_at', 'updated_at', 'status',
 
 
 class TradeRequestUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradeRequest
-        fields = ('uuid', 'is_accepted', 'created_at', 'updated_at')
+        fields = ('uuid', 'status', 'created_at', 'updated_at')
         read_only_fields = 'created_at', 'updated_at'

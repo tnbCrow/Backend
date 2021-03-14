@@ -65,7 +65,7 @@ class TradeRequest(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.post}: {self.is_accepted}'
+        return f'{self.post}: {self.status}'
 
 
 class ActiveTrade(models.Model):
