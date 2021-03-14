@@ -7,13 +7,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 
 
-TEST_PASS = "@Testpass123"
-TEST_USER ={
-    'email': 'user@example.com',
-    'username': 'testuser',
-    'password': TEST_PASS,
-    're_password': TEST_PASS,
-}
+from .test_utils import TEST_USER,TEST_PASS
 
 class AuthneticationTest(APITestCase):
     def create_test_user(self):

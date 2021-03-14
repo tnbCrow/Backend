@@ -15,11 +15,12 @@ def get_user(scope):
     close_old_connections()
     query_string = parse_qs(scope['query_string'].decode())
     token = query_string.get('token')
+
     if not token:
         return AnonymousUser()
     try:
         access_token = AccessToken(token[0])
-        user = User.objects.get(id=access_token['id'])
+        user = User.objects.get(uuid=access_token['user_id'])
     except Exception as exception:
         return AnonymousUser()
     if not user.is_active:
