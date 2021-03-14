@@ -1,3 +1,6 @@
+import base64
+import json
+
 from rest_framework.test import APITestCase
 from rest_framework.reverse import reverse
 from django.contrib.auth import get_user_model
@@ -14,12 +17,8 @@ TEST_USER ={
 
 class AuthneticationTest(APITestCase):
     def create_test_user(self):
-        user_model = get_user_model()
-        user = user_model.objects.create(
-            username=TEST_USER.get('username'),
-            email=TEST_USER.get('email'),
-            password=TEST_USER.get('password'),
-        )
+        response = self.client.post(reverse('user-list'), data=TEST_USER)
+        user = get_user_model().objects.last()
         return user
 
     def test_user_register(self):
@@ -31,14 +30,22 @@ class AuthneticationTest(APITestCase):
         assert response.data['username'] == user.username
         assert response.data['email'] == user.email
 
-
     def test_user_sigin_in(self):
         user = self.create_test_user()
-        print(user.email)
         response = self.client.post(reverse('jwt-create'), data={
             'email': user.email,
             'password': TEST_PASS,
         })
 
+        # Login success
         assert status.HTTP_200_OK == response.status_code
-        assert response.data.get("acess") is not None
+
+        # Parsing payload data from access token.
+        assert response.data.get("access") is not None
+        access = response.data['access']
+        _, payload, _ = access.split('.')
+        decoded_payload = base64.b64decode(f'{payload}==')
+        payload_data = json.loads(decoded_payload)    
+
+        # Get uiid of same user
+        assert payload_data.get('user_id') == str(user.uuid)
