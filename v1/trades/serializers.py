@@ -1,6 +1,8 @@
+from django.db import transaction
+
 from rest_framework import serializers
 
-from .models import TradePost, TradeRequest
+from .models import TradePost, TradeRequest, ActiveTrade
 
 class TradePostSerializer(serializers.ModelSerializer):
 
@@ -27,3 +29,12 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
         model = TradeRequest
         fields = ('uuid', 'post', 'status', 'created_at', 'updated_at')
         read_only_fields = 'created_at', 'updated_at', 'post'
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        instance = super(TradeRequestUpdateSerializer, self).update(instance, validated_data)
+        context =self.context['request']
+        if 'status' in context.data:
+            if context.data['status'] == '1':
+                obj, created = ActiveTrade.objects.get_or_create(post=instance.post, initiator=self.context['request'].user)
+        return instance
