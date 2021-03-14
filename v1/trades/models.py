@@ -45,17 +45,30 @@ class TradePost(models.Model):
 
 
 class TradeRequest(models.Model):
+    PENDIGN = 0
+    ACCEPTED = 1
+    REJECTED = 2
+
+    REQUEST_STATUS = [
+        (PENDIGN, 'Pending'),
+        (ACCEPTED, 'Accepted'),
+        (REJECTED, 'Rejected')
+    ]
+
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
 
     post = models.ForeignKey(TradePost, on_delete=models.CASCADE)
     initiator = models.ForeignKey(User, on_delete=models.CASCADE)
-    is_accepted = models.BooleanField(default=False)             # checks if post owner has accepted the trade request
+    status = models.IntegerField(choices=REQUEST_STATUS, default=0) # checks if post owner has accepted the trade request
+
+    message = models.CharField(max_length=255)
+    amount = models.IntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.post}: {self.is_accepted}'
+        return f'{self.post}: {self.status}'
 
 
 class ActiveTrade(models.Model):
@@ -63,6 +76,7 @@ class ActiveTrade(models.Model):
 
     post = models.ForeignKey(TradePost, on_delete=models.CASCADE)
     initiator = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.IntegerField()
 
     initiator_confirmed = models.BooleanField(default=False)
     owner_confirmed = models.BooleanField(default=False)
