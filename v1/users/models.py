@@ -18,7 +18,7 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-
+ 
 class Wallet(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
 
