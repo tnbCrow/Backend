@@ -59,7 +59,7 @@ class TradeRequest(models.Model):
 
     post = models.ForeignKey(TradePost, on_delete=models.CASCADE)
     initiator = models.ForeignKey(User, on_delete=models.CASCADE)
-    status = models.IntegerField(choices=REQUEST_STATUS) # checks if post owner has accepted the trade request
+    status = models.IntegerField(choices=REQUEST_STATUS, default=0) # checks if post owner has accepted the trade request
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
