@@ -27,8 +27,8 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradeRequest
-        fields = ('uuid', 'post', 'status', 'created_at', 'updated_at')
-        read_only_fields = 'created_at', 'updated_at', 'post'
+        fields = ('uuid', 'post', 'status', 'amount', 'message', 'created_at', 'updated_at')
+        read_only_fields = 'created_at', 'updated_at', 'post', 'amount', 'message'
 
     @transaction.atomic
     def update(self, instance, validated_data):
@@ -36,7 +36,7 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
         context =self.context['request']
         if 'status' in context.data:
             if context.data['status'] == '1':
-                obj, created = ActiveTrade.objects.get_or_create(post=instance.post, initiator=self.context['request'].user, amount=instance.amount)
+                obj, created = ActiveTrade.objects.get_or_create(post=instance.post, initiator=instance.initiator, amount=instance.amount)
         return instance
 
 
