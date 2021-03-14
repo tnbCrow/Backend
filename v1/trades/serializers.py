@@ -25,5 +25,5 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradeRequest
-        fields = ('uuid', 'status', 'created_at', 'updated_at')
-        read_only_fields = 'created_at', 'updated_at'
+        fields = ('uuid', 'post', 'status', 'created_at', 'updated_at')
+        read_only_fields = 'created_at', 'updated_at', 'post'

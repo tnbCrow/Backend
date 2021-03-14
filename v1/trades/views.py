@@ -32,9 +32,15 @@ class TradePostViewSet(viewsets.ModelViewSet):
 
 class TradeRequestViewSet(viewsets.ModelViewSet):
 
-    queryset = TradeRequest.objects.all()
-    
-    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        """
+        This view should return a list of all the wallets
+        for the currently authenticated user.
+        """
+        if self.request.method in SAFE_METHODS:
+            return TradeRequest.objects.filter(Q(initiator=self.request.user)|Q(post__owner=self.request.user))
+        else:
+            return TradeRequest.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -47,6 +53,8 @@ class TradeRequestViewSet(viewsets.ModelViewSet):
             return [TradeRequestInitiator(), ]
         elif self.action == 'partial_update' or self.action =='update':
             return [TradeRequestPostOwner(), ]
+        else:
+            return [IsAuthenticated(), ]
 
     def perform_create(self, serializer):
         serializer.save(initiator=self.request.user)
