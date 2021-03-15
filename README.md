@@ -1,4 +1,6 @@
-Backend Of soon to be the greatest escorw for thenewboston.
+## Overview
+
+Backend Of tnbCrow.
 
 ## Project Setup
 
@@ -16,8 +18,17 @@ pip install -r requirements.txt
 
 To check styling:
 ```shell
-flake8 --config=.flake8 config tests v1
+flake8 --config=.flake8 config v1
 ```
+
+## Community
+Join the community to stay updated on the most recent developments, project roadmaps, and random discussions about completely unrelated topics.
+
+Discrod: https://discord.gg/szzKjqX8A4
+
+Twitter: https://twitter.com/tnbcrow
+
+Facebook: https://www.facebook.com/tnbcorw
 
 ## Donate
 
