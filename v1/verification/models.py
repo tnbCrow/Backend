@@ -1,7 +1,6 @@
 from uuid import uuid4
 
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 
 from v1.users.models import User
 from v1.constants.models import Country

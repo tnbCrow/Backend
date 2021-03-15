@@ -1,5 +1,6 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
+
 class IsStaffOrReadOnly(BasePermission):
     """The request is authenticated as a user and is staff, or is a read-only request"""
 
@@ -17,6 +18,6 @@ class ReadOnly(BasePermission):
 
 
 class IsOwner(BasePermission):
-    
+
     def has_object_permission(self, request, view, obj):
         return self.has_permission(request, view) and request.user == obj.owner

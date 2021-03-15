@@ -11,7 +11,7 @@ class WalletCreateSerializer(serializers.ModelSerializer):
         model = Wallet
         fields = ('uuid', 'account_number', 'is_primary', 'created_at', 'updated_at')
         read_only_fields = 'created_at', 'updated_at', 'is_primary',
-    
+
     @transaction.atomic
     def create(self, validated_data):
         instance = super(WalletCreateSerializer, self).create(validated_data)
@@ -27,10 +27,10 @@ class WalletUpdateSerializer(WalletCreateSerializer):
         model = Wallet
         fields = ('uuid', 'account_number', 'is_primary', 'created_at', 'updated_at')
         read_only_fields = 'created_at', 'updated_at'
-    
+
     @transaction.atomic
     def update(self, instance, validated_data):
-        data =self.context['request'].data
+        data = self.context['request'].data
         if 'is_primary' in data:
             if data['is_primary'] == 'True':
                 primary_wallets = Wallet.objects.filter(owner=self.context['request'].user, is_primary=True)

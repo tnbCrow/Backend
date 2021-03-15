@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.exceptions import AuthenticationFailed, InvalidToken, TokenError
 from rest_framework_simplejwt.views import TokenViewBase
 
+
 class CustomTokenObtainPairView(TokenViewBase):
     """
     Takes a set of user credentials and returns an access and refresh JSON web

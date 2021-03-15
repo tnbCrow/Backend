@@ -4,14 +4,15 @@ from rest_framework import serializers
 
 from .models import TradePost, TradeRequest, ActiveTrade, CompletedTrade
 
+
 class TradePostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradePost
-        fields = ('uuid', 'owner_role', 'transaction_type', 'currency',\
-                'payment_method', 'exchange', 'margin',\
-                'rate', 'amount', 'terms_of_trade', 'min_reputation',\
-                'broadcast_trade', 'is_active', 'created_at', 'updated_at')
+        fields = ('uuid', 'owner_role', 'transaction_type', 'currency',
+                  'payment_method', 'exchange', 'margin',
+                  'rate', 'amount', 'terms_of_trade', 'min_reputation',
+                  'broadcast_trade', 'is_active', 'created_at', 'updated_at')
         read_only_fields = 'created_at', 'updated_at', 'rate',
 
 
@@ -33,7 +34,7 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def update(self, instance, validated_data):
         instance = super(TradeRequestUpdateSerializer, self).update(instance, validated_data)
-        context =self.context['request']
+        context = self.context['request']
         if 'status' in context.data:
             if context.data['status'] == '1':
                 obj, created = ActiveTrade.objects.get_or_create(post=instance.post, initiator=instance.initiator, amount=instance.amount)
@@ -41,12 +42,12 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
 
 
 class ActiveTradeSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = ActiveTrade
         fields = ('uuid', 'post', 'amount', 'initiator_confirmed', 'owner_confirmed', 'created_at', 'updated_at')
         read_only_fields = 'created_at', 'updated_at', 'post', 'amount'
-    
+
     @transaction.atomic
     def update(self, instance, validated_data):
         instance = super(ActiveTradeSerializer, self).update(instance, validated_data)

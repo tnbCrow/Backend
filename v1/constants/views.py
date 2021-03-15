@@ -1,4 +1,3 @@
-from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import viewsets
 
 from .models import Country, TransactionType, Exchange, Currency
@@ -21,6 +20,7 @@ class ExchangeViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = Exchange.objects.all()
     serializer_class = ExchangeSerializer
+
 
 class CurrencyViewSet(viewsets.ReadOnlyModelViewSet):
 

@@ -24,7 +24,7 @@ class TradePost(models.Model):
     transaction_type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
-    
+
     exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
     margin = models.IntegerField()
     rate = models.IntegerField()
@@ -59,7 +59,7 @@ class TradeRequest(models.Model):
 
     post = models.ForeignKey(TradePost, on_delete=models.CASCADE)
     initiator = models.ForeignKey(User, on_delete=models.CASCADE)
-    status = models.IntegerField(choices=REQUEST_STATUS, default=0) # checks if post owner has accepted the trade request
+    status = models.IntegerField(choices=REQUEST_STATUS, default=0)  # checks if post owner has accepted the trade request
 
     message = models.CharField(max_length=255)
     amount = models.IntegerField()
