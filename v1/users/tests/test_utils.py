@@ -12,14 +12,15 @@ TEST_USER ={
     're_password': TEST_PASS,
 }
 
+
 @database_sync_to_async
-def get_test_user():
+def get_test_user(user_info=TEST_USER):
     
     #Create user
     user = get_user_model().objects.create_user(
-        username=TEST_USER['username'],
-        email=TEST_USER['email'],
-        password=TEST_USER['password'],
+        username=user_info['username'],
+        email=user_info['email'],
+        password=user_info['password'],
     )
 
     access = AccessToken.for_user(user)
