@@ -11,13 +11,17 @@ django-templated-mail==1.1.1
 djangorestframework==3.12.2
 djangorestframework-simplejwt==4.6.0
 djoser==2.1.0
+flake8==3.9.0
 idna==2.10
 importlib-metadata==1.7.0
 itypes==1.2.0
 Jinja2==2.11.3
 MarkupSafe==1.1.1
+mccabe==0.6.1
 oauthlib==3.1.0
+pycodestyle==2.7.0
 pycparser==2.20
+pyflakes==2.3.0
 PyJWT==2.0.1
 python-decouple==3.4
 python3-openid==3.2.0

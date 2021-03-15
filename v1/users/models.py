@@ -2,12 +2,11 @@ from uuid import uuid4
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import gettext_lazy as _
 
 from v1.third_party.tnbCrow.constants import VERIFY_KEY_LENGTH
 from v1.third_party.tnbCrow.models import CreatedModified
 
-# Create your models here.
+
 class User(AbstractUser):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
     email = models.EmailField(unique=True)
@@ -15,7 +14,7 @@ class User(AbstractUser):
     first_name = None
     last_name = None
 
-    memo = models.CharField(max_length=44, default="tnbcrow-"+ str(uuid4), unique=True,  editable=False)
+    memo = models.CharField(max_length=44, default="tnbcrow-" + str(uuid4), unique=True, editable=False)
     balance = models.PositiveBigIntegerField(default=0)
     reputation = models.IntegerField(default=100)
 
