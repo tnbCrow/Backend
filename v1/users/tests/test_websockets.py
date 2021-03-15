@@ -57,6 +57,24 @@ class TestWebsocketsChat:
             application=application,
             path=f'/chat/{user.uuid}/?token={token}'
         )
+        _ = await communicator.connect()
+
+        message = {
+            'type': 'chat.message',
+            'data': 'This is a test message.',
+        }
+
+        await communicator.send_json_to(message)
+        response = await communicator.receive_json_from()
+        assert response == message
+
+
+    async def test_user_can_receive_message(self):
+        user, token = await get_test_user()
+        communicator = WebsocketCommunicator(
+            application=application,
+            path=f'/chat/{user.uuid}/?token={token}'
+        )
 
         connected, _ = await communicator.connect()
         message = {
