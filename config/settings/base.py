@@ -23,10 +23,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-
+    
+    # third party
+    'channels',
     'rest_framework',
     'djoser',
 
+    # local
     'v1.constants.apps.ConstantsConfig',
     'v1.users.apps.UsersConfig',
     'v1.trades.apps.TradesConfig',
@@ -100,7 +103,7 @@ REST_FRAMEWORK = {
 }
 
 DJOSER = {
-    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_ACTIVATION_EMAIL': False,
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'USER_CREATE_PASSWORD_RETYPE': True,
@@ -118,6 +121,18 @@ SIMPLE_JWT = {
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.AllowAllUsersModelBackend',
 ]
+
+
+#Channels Config
+ASGI_APPLICATION = 'config.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 AUTH_USER_MODEL = 'users.User'
 
