@@ -12,7 +12,7 @@ from .test_utils import TEST_USER, TEST_PASS
 
 class AuthneticationTest(APITestCase):
     def create_test_user(self):
-        # response = self.client.post(reverse('user-list'), data=TEST_USER)
+        _ = self.client.post(reverse('user-list'), data=TEST_USER)
         user = get_user_model().objects.last()
         return user
 

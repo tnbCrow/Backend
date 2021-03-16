@@ -5,7 +5,7 @@ from channels.layers import get_channel_layer
 from config.asgi import application
 
 from .test_utils import (
-    get_test_user
+    get_test_user_async
 )
 
 TEST_CHANNEL_LAYERS = {
@@ -25,7 +25,7 @@ def base_settings():
 @pytest.mark.django_db(transaction=True)
 class TestWebsocketsAuth:
     async def test_login_user_can_connect_to_wss(self, base_settings):
-        user, token = await get_test_user()
+        user, token = await get_test_user_async()
         communicator = WebsocketCommunicator(
             application=application,
             path=f'/chat/{user.uuid}/?token={token}'
@@ -36,7 +36,7 @@ class TestWebsocketsAuth:
         await communicator.disconnect()
 
     async def test_anym_user_cannot_connect_to_wss(self, base_settings):
-        user, token = await get_test_user()
+        user, token = await get_test_user_async()
         communicator = WebsocketCommunicator(
             application=application,
             path=f'/chat/{user.uuid}/?token=faketoken'
@@ -52,7 +52,7 @@ class TestWebsocketsAuth:
 class TestWebsocketsChat:
 
     async def test_user_can_receive_message(self):
-        user, token = await get_test_user()
+        user, token = await get_test_user_async()
         communicator = WebsocketCommunicator(
             application=application,
             path=f'/chat/{user.uuid}/?token={token}'
