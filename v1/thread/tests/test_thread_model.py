@@ -9,4 +9,3 @@ class TestThreadModel(TestCase):
         user2, _ = get_test_user(manual_user="test2")
         chat_thread = ChatThread(primary_user=user1, secondary_user=user2)
         assert chat_thread.primary_user == user1
-
