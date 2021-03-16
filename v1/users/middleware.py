@@ -10,6 +10,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 User = get_user_model()
 
+
 @database_sync_to_async
 def get_user(scope):
     close_old_connections()
@@ -21,11 +22,12 @@ def get_user(scope):
     try:
         access_token = AccessToken(token[0])
         user = User.objects.get(uuid=access_token['user_id'])
-    except Exception as exception:
+    except Exception:  # as exception:
         return AnonymousUser()
     if not user.is_active:
         return AnonymousUser()
     return user
+
 
 class TokenAuthMiddleware(AuthMiddleware):
     async def resolve_scope(self, scope):

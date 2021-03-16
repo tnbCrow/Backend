@@ -18,6 +18,7 @@ class TradePostViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.request.method in SAFE_METHODS:
+            print(str(self.request.user.memo))
             return [AllowAny(), ]
         elif self.action == 'create':
             return [IsAuthenticated(), ]

@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 TEST_PASS = "@Testpass123"
 
-TEST_USER ={
+TEST_USER = {
     'email': 'user@example.com',
     'username': 'testuser',
     'password': TEST_PASS,
@@ -15,7 +15,7 @@ TEST_USER ={
 
 @database_sync_to_async
 def get_test_user(user_info=TEST_USER):
-    
+
     # Create user
     user = get_user_model().objects.create_user(
         username=user_info['username'],

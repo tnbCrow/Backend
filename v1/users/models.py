@@ -14,12 +14,13 @@ class User(AbstractUser):
     first_name = None
     last_name = None
 
-    memo = models.CharField(max_length=44, default="tnbcrow-" + str(uuid4), unique=True, editable=False)
+    memo = models.CharField(max_length=44, unique=True, editable=False)
     balance = models.PositiveBigIntegerField(default=0)
     reputation = models.IntegerField(default=100)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+
 
 class Wallet(CreatedModified):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
@@ -31,3 +32,21 @@ class Wallet(CreatedModified):
 
     def __str__(self):
         return f"{self.owner.username}: {self.account_number}: {self.is_primary}"
+
+
+# generate a random memo and check if its already taken.
+# If taken, generate another memo again until we find a valid memo
+def generate_memo(instance):
+    memo = f'tnbcrow-{uuid4()}'
+    while True:
+        if not User.objects.filter(memo=memo).exists():
+            return memo
+
+
+def pre_save_post_receiver(sender, instance, *args, **kwargs):
+    if not instance.memo:
+        instance.memo = generate_memo(instance)
+
+
+# save the memo before the User model is saved with the unique memo
+models.signals.pre_save.connect(pre_save_post_receiver, sender=User)
