@@ -35,6 +35,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Make envfile
+          with:
+            envkey_DEBUG: false
+            envkey_SECRET_KEY: "testinlksdfjls;kdfjasklfjasdlfj;jsaafjl"
+
       - name: Install dependencies
         run: pip install -r requirements.txt
 
