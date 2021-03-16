@@ -1,6 +1,6 @@
 ## Overview
 
-Backend Of tnbCrow.
+Backend Of tnbCrow. [Know more about tnbCrow](ABOUT.md)
 
 ## Project Setup
 

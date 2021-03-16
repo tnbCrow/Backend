@@ -23,4 +23,5 @@ tnbCrow is the first escrow application being built for thenewboston. We facilit
 - Verify that you have recieved the payment.
 - Once the buyer verifies the same, we will load coins into your buyers primary wallet address.
 
-Flow Image: ![Image of UserFlow](https://user-images.githubusercontent.com/55182298/111249983-aa637c00-8634-11eb-9e26-723abc92925a.png)
+### Flow Image:
+![Image of UserFlow](https://user-images.githubusercontent.com/55182298/111249983-aa637c00-8634-11eb-9e26-723abc92925a.png)
