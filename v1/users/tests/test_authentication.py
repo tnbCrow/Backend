@@ -7,11 +7,12 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 
 
-from .test_utils import TEST_USER,TEST_PASS
+from .test_utils import TEST_USER, TEST_PASS
+
 
 class AuthneticationTest(APITestCase):
     def create_test_user(self):
-        response = self.client.post(reverse('user-list'), data=TEST_USER)
+        # response = self.client.post(reverse('user-list'), data=TEST_USER)
         user = get_user_model().objects.last()
         return user
 
@@ -39,7 +40,7 @@ class AuthneticationTest(APITestCase):
         access = response.data['access']
         _, payload, _ = access.split('.')
         decoded_payload = base64.b64decode(f'{payload}==')
-        payload_data = json.loads(decoded_payload)    
+        payload_data = json.loads(decoded_payload)
 
         # Get uiid of same user
         assert payload_data.get('user_id') == str(user.uuid)
