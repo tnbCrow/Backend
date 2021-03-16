@@ -1,10 +1,10 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from channels.db import database_sync_to_async
+
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         user = self.scope['user']
-        
+
         if user.is_anonymous:
             await self.close()
         else:
@@ -24,7 +24,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         print("got message")
         print(self.chat_group_name)
         message_type = content.get('type')
-        
+
         #send the message to the group
         await self.channel_layer.group_send(
             self.chat_group_name,
@@ -34,10 +34,10 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             }
         )
 
-    #Receive message from the group
+    # Receive message from the group
     async def chat_message(self,message):
         #send message to the client
         await self.send_json(message)
-    
+
     async def disconnect(self, code):
         await super().disconnect(code)

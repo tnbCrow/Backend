@@ -16,7 +16,7 @@ TEST_USER ={
 @database_sync_to_async
 def get_test_user(user_info=TEST_USER):
     
-    #Create user
+    # Create user
     user = get_user_model().objects.create_user(
         username=user_info['username'],
         email=user_info['email'],
@@ -25,4 +25,3 @@ def get_test_user(user_info=TEST_USER):
 
     access = AccessToken.for_user(user)
     return user, access
-

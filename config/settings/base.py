@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    
+
     # third party
     'channels',
     'rest_framework',
@@ -123,7 +123,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-#Channels Config
+# Channels Config
 ASGI_APPLICATION = 'config.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
