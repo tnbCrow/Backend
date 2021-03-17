@@ -4,8 +4,6 @@ from rest_framework import serializers
 
 from .models import TradePost, TradeRequest, ActiveTrade, CompletedTrade
 
-from v1.users.models import User
-
 
 class TradePostSerializer(serializers.ModelSerializer):
 
@@ -23,7 +21,7 @@ class TradePostSerializer(serializers.ModelSerializer):
         user = context.user
         amount = int(context.data['amount'])
         if context.data['owner_role'] == '1':
-            if int(user.balance) >= amount :
+            if int(user.balance) >= amount:
                 user.balance -= amount
                 user.save()
             else:
@@ -39,7 +37,7 @@ class TradeRequestCreateSerializer(serializers.ModelSerializer):
         model = TradeRequest
         fields = ('uuid', 'post', 'amount', 'message', 'status', 'created_at', 'updated_at')
         read_only_fields = 'created_at', 'updated_at', 'status',
-    
+
     @transaction.atomic
     def create(self, validated_data):
         context = self.context['request']
@@ -47,7 +45,7 @@ class TradeRequestCreateSerializer(serializers.ModelSerializer):
         amount = int(context.data['amount'])
         post = TradePost.objects.get(uuid=context.data['post'])
         if post.owner_role == 0:
-            if int(user.balance) >= amount :
+            if int(user.balance) >= amount:
                 user.balance -= amount
                 user.save()
             else:
