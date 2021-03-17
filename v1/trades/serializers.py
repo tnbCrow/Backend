@@ -43,7 +43,7 @@ class TradeRequestCreateSerializer(serializers.ModelSerializer):
         context = self.context['request']
         user = context.user
         amount = int(context.data['amount'])
-        post = TradePost.objects.get(uuid=context.data['post'])
+        post = self.instance.post
         if post.owner_role == 0:
             if int(user.balance) >= amount:
                 user.balance -= amount
@@ -64,12 +64,20 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
+        if self.instance.status == 2:
+            error = {'error': 'You cannot undo a rejected trade request'}
+            raise serializers.ValidationError(error)
         instance = super(TradeRequestUpdateSerializer, self).update(instance, validated_data)
         context = self.context['request']
         if 'status' in context.data:
             if context.data['status'] == '1':
                 obj, created = ActiveTrade.objects.get_or_create(post=instance.post, initiator=instance.initiator, amount=instance.amount)
-        return instance
+            elif context.data['status'] == '2':
+                if self.instance.post.owner_role == 0:
+                    user = context.user
+                    user.balance += self.instance.amount
+                    user.save()
+            return instance
 
 
 class ActiveTradeSerializer(serializers.ModelSerializer):
@@ -82,7 +90,6 @@ class ActiveTradeSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def update(self, instance, validated_data):
         instance = super(ActiveTradeSerializer, self).update(instance, validated_data)
-        print(instance.post.owner_role)
         if instance.initiator_confirmed and instance.owner_confirmed:
             if instance.post.owner_role == 0:
                 buyer = instance.post.owner
