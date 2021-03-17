@@ -4,7 +4,7 @@ from factory.django import DjangoModelFactory
 from v1.users.factories.user import UserFactory
 from v1.constants.factories.constants import TransactionTypeFactory, CurrencyFactory, PaymentMethodFactory, ExchangeFactory
 
-from ..models import TradePost
+from ..models import TradePost, TradeRequest, ActiveTrade, CompletedTrade
 
 
 class TradePostFactory(DjangoModelFactory):
@@ -24,3 +24,33 @@ class TradePostFactory(DjangoModelFactory):
 
     class Meta:
         model = TradePost
+
+
+class TradeRequestFactory(DjangoModelFactory):
+    post = factory.SubFactory(TradePostFactory)
+    initiator = factory.SubFactory(UserFactory)
+    status = factory.Faker('pyint')
+    message = factory.Faker('pystr', max_chars=255)
+    amount = factory.Faker('pyint')
+
+    class Meta:
+        model = TradeRequest
+
+
+class ActiveTradeFactory(DjangoModelFactory):
+    post = factory.SubFactory(TradePostFactory)
+    initiator = factory.SubFactory(UserFactory)
+    initiator_confirmed = factory.Faker('pybool')
+    owner_confirmed = factory.Faker('pybool')
+
+    class Meta:
+        model = ActiveTrade
+
+
+class CompletedTradeFactory(DjangoModelFactory):
+    seller = factory.SubFactory(UserFactory)
+    buyer = factory.SubFactory(UserFactory)
+    amount = factory.Faker('pyint')
+
+    class Meta:
+        model = CompletedTrade
