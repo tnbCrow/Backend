@@ -1,18 +1,18 @@
-from unittest.mock import ANY
+# from unittest.mock import ANY
 
-from freezegun import freeze_time
+# from freezegun import freeze_time
 from rest_framework import serializers, status
 from rest_framework.reverse import reverse
 
 from ..factories.trade import TradePostFactory
-from ..models import TradePost
+
 
 def test_trade_post_list(api_client, django_assert_max_num_queries):
     trade_posts = TradePostFactory.create_batch(10)
 
     with django_assert_max_num_queries(2):
         r = api_client.get(reverse('tradepost-list'), {'limit': 0})
-    
+
     assert r.status_code == status.HTTP_200_OK
     assert len(r.data) == 10
     assert r.data[0] == {

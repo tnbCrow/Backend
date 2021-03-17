@@ -6,6 +6,7 @@ from v1.constants.factories.constants import TransactionTypeFactory, CurrencyFac
 
 from ..models import TradePost
 
+
 class TradePostFactory(DjangoModelFactory):
     owner = factory.SubFactory(UserFactory)
     owner_role = factory.Faker('pyint')

@@ -1,7 +1,7 @@
 import factory
 from factory.django import DjangoModelFactory
 
-from ..models import Exchange, TransactionType, PaymentMethod,Currency, TransactionFee, Country
+from ..models import Exchange, TransactionType, PaymentMethod, Currency, TransactionFee, Country
 
 
 class ExchangeFactory(DjangoModelFactory):
