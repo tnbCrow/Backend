@@ -32,11 +32,11 @@ class TradePostViewSet(viewsets.ModelViewSet):
 
 
 class TradeRequestViewSet(
-    mixins.CreateModelMixin, 
-    mixins.RetrieveModelMixin, 
-    mixins.UpdateModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet):
+        mixins.CreateModelMixin,
+        mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin,
+        mixins.ListModelMixin,
+        viewsets.GenericViewSet):
 
     def get_queryset(self):
         """
