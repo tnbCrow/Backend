@@ -39,6 +39,7 @@ class WalletUpdateSerializer(WalletCreateSerializer):
                     wallets.save()
             else:
                 validated_data.pop('is_primary', [])
-                raise serializers.ValidationError("You cannot unset Primary Account Number")
+                error = {'error': 'You cannot unset Primary Account Number'}
+                raise serializers.ValidationError(error)
         instance = super(WalletUpdateSerializer, self).update(instance, validated_data)
         return instance

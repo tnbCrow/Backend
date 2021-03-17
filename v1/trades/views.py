@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated, AllowAny, SAFE_METHODS
 
 from django.db.models import Q
@@ -18,7 +19,6 @@ class TradePostViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.request.method in SAFE_METHODS:
-            print(str(self.request.user.memo))
             return [AllowAny(), ]
         elif self.action == 'create':
             return [IsAuthenticated(), ]
@@ -31,7 +31,12 @@ class TradePostViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user, rate=rate)
 
 
-class TradeRequestViewSet(viewsets.ModelViewSet):
+class TradeRequestViewSet(
+        mixins.CreateModelMixin,
+        mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin,
+        mixins.ListModelMixin,
+        viewsets.GenericViewSet):
 
     def get_queryset(self):
         """
