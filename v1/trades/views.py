@@ -66,9 +66,19 @@ class TradeRequestViewSet(
         serializer.save(initiator=self.request.user)
 
 
-class ActiveTradeViewSet(viewsets.ModelViewSet):
+class ActiveTradeViewSet(
+        mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin,
+        mixins.ListModelMixin,
+        viewsets.GenericViewSet):
 
-    queryset = ActiveTrade.objects.all()
+    def get_queryset(self):
+        """
+        This view should return a list of all the wallets
+        for the currently authenticated user.
+        """
+        return ActiveTrade.objects.filter(Q(initiator=self.request.user) | Q(post__owner=self.request.user))
+
     serializer_class = ActiveTradeSerializer
 
     def get_permissions(self):
