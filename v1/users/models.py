@@ -15,7 +15,10 @@ class User(AbstractUser):
     last_name = None
 
     memo = models.CharField(max_length=44, unique=True, editable=False)
-    balance = models.PositiveBigIntegerField(default=0)
+
+    loaded = models.IntegerField(default=0)  # total coins loaded to the account
+    locked = models.IntegerField(default=0)  # coins locked when creating tradePost or tradeRequest
+
     reputation = models.IntegerField(default=100)
 
     USERNAME_FIELD = 'email'
