@@ -7,6 +7,7 @@ from v1.third_party.tnbCrow.constants import VERIFY_KEY_LENGTH
 from v1.third_party.tnbCrow.models import CreatedModified
 
 
+# Holds the User info.
 class User(AbstractUser):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
     email = models.EmailField(unique=True)
@@ -25,6 +26,8 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username']
 
 
+# Assigns the users with their respective wallets.
+# M-T-O with User model
 class Wallet(CreatedModified):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
 
