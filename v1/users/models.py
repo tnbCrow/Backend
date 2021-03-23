@@ -7,6 +7,7 @@ from v1.third_party.tnbCrow.constants import VERIFY_KEY_LENGTH
 from v1.third_party.tnbCrow.models import CreatedModified
 
 
+# Holds the User info.
 class User(AbstractUser):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
     email = models.EmailField(unique=True)
@@ -15,13 +16,18 @@ class User(AbstractUser):
     last_name = None
 
     memo = models.CharField(max_length=44, unique=True, editable=False)
-    balance = models.PositiveBigIntegerField(default=0)
+
+    loaded = models.IntegerField(default=0)  # total coins loaded to the account
+    locked = models.IntegerField(default=0)  # coins locked when creating tradePost or tradeRequest
+
     reputation = models.IntegerField(default=100)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
 
+# Assigns the users with their respective wallets.
+# M-T-O with User model
 class Wallet(CreatedModified):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
 

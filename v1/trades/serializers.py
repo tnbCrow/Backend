@@ -21,8 +21,8 @@ class TradePostSerializer(serializers.ModelSerializer):
         user = context.user
         amount = int(context.data['amount'])
         if context.data['owner_role'] == '1':
-            if int(user.balance) >= amount:
-                user.balance -= amount
+            if int(user.loaded) - int(user.locked) >= amount:
+                user.locked += amount
                 user.save()
             else:
                 error = {'error': 'Please load enough coins into your account'}
@@ -45,8 +45,8 @@ class TradeRequestCreateSerializer(serializers.ModelSerializer):
         amount = int(context.data['amount'])
         post = self.instance.post
         if post.owner_role == 0:
-            if int(user.balance) >= amount:
-                user.balance -= amount
+            if int(user.loaded) - int(user.locked) >= amount:
+                user.locked += amount
                 user.save()
             else:
                 error = {'error': 'Please load enough coins into your account'}
@@ -75,7 +75,7 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
             elif context.data['status'] == '2':
                 if self.instance.post.owner_role == 0:
                     user = context.user
-                    user.balance += self.instance.amount
+                    user.locked -= self.instance.amount
                     user.save()
             return instance
 
@@ -97,5 +97,9 @@ class ActiveTradeSerializer(serializers.ModelSerializer):
             else:
                 seller = instance.post.owner
                 buyer = instance.initiator
+            user = self.context['request'].user
+            user.loaded += instance.amount
+            user.locked -= instance.amount
+            user.save()
             CompletedTrade.objects.create(buyer=buyer, seller=seller, amount=instance.amount)
         return instance

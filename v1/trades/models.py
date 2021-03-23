@@ -6,7 +6,7 @@ from v1.users.models import User
 from v1.constants.models import TransactionType, Currency, PaymentMethod, Exchange
 
 
-# Create your models here.
+# This model is responsible to hold all the tradePost information that the user will create.
 class TradePost(models.Model):
     BUYER = 0
     SELLER = 1
@@ -44,6 +44,8 @@ class TradePost(models.Model):
         return f'{self.uuid}: {self.is_active}'
 
 
+# The initiator will create a tradeRequest if they're interested to make a transaction
+# The owner of tradePost will be incharge of accepting or rejecting the trade request.
 class TradeRequest(models.Model):
     PENDIGN = 0
     ACCEPTED = 1
@@ -71,6 +73,9 @@ class TradeRequest(models.Model):
         return f'{self.post}: {self.status}'
 
 
+# Once the trade request is accepted, it will be forwarded to this model.
+# initiator_confirmed and owner_confirmed flag will be used to confirm both parties have
+# sent and recieved the payments
 class ActiveTrade(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
 
@@ -88,6 +93,8 @@ class ActiveTrade(models.Model):
         return f'{self.post}'
 
 
+# once the trade is completed, it will be forwarded to this model.
+# Here, the payments will be forwarded to respective personals.
 class CompletedTrade(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
 
