@@ -25,3 +25,17 @@ tnbCrow is the first escrow application being built for thenewboston. We facilit
 
 ### Flow Image:
 ![Image of UserFlow](https://user-images.githubusercontent.com/55182298/111249983-aa637c00-8634-11eb-9e26-723abc92925a.png)
+
+### User Balance Flow
+#### Role - Seller
+- User will load the coins into tnbCrow wallet. We will scan the chain with the memo and update the balance of the user.
+- When the user is creating a trading post, they will need to have X coins loaded into their account before creating.
+- Once they create a trading post, the balance of the user is deducted so as to stop them from creating another trading post with no coins into the wallet.
+- If they cancel or delete the trading post, the balance gets added to their account.
+- If the trade is completed, we'll send coins to the buyer's primary wallet address.
+#### Role - Buyer
+- The user will create a trade post with the number of coins that they want.
+- The seller will need to have X coins loaded into their account before creating a trade request.
+- Once they create a trade request, the balance of the user is deducted so as to stop them from creating another trading request with no coins into the wallet.
+- If the buyer cancels or deletes the trading post or rejects a trade request, the balance gets added to the seller's account.
+- If the trade is completed, we'll send coins to the buyer's primary wallet address.
