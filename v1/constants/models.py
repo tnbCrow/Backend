@@ -3,7 +3,7 @@ from uuid import uuid4
 from django.db import models
 
 
-# Exchange model will hold the value of TNBC in different exchanges 
+# Exchange model will hold the value of TNBC in different exchanges
 # that will be avaiable in future
 class Exchange(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
