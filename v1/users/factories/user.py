@@ -1,7 +1,6 @@
 import factory
 from factory.django import DjangoModelFactory
 
-from v1.third_party.tnbCrow.constants import MAX_POINT_VALUE
 from v1.third_party.tnbCrow.constants import VERIFY_KEY_LENGTH
 
 from ..models import User, Wallet
@@ -10,7 +9,8 @@ from ..models import User, Wallet
 class UserFactory(DjangoModelFactory):
     email = factory.Faker('email')
     memo = factory.Faker('pystr', max_chars=44)
-    balance = factory.Faker('pyint', max_value=MAX_POINT_VALUE)
+    loaded = factory.Faker('pyint')
+    locked = factory.Faker('pyint')
     reputation = factory.Faker('pyint')
     username = factory.Faker('pystr', max_chars=150)
 
