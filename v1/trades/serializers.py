@@ -41,9 +41,14 @@ class TradeRequestCreateSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def create(self, validated_data):
         context = self.context['request']
-        user = context.user
         amount = int(context.data['amount'])
-        post = self.instance.post
+
+        if self.validated_data['post'].amount <= amount:
+            error = {'error': 'Amount has exceeded the trade amount'}
+            raise serializers.ValidationError(error)
+
+        user = context.user
+        post = self.validated_data['post']
         if post.owner_role == 0:
             if int(user.loaded) - int(user.locked) >= amount:
                 user.locked += amount
@@ -51,6 +56,9 @@ class TradeRequestCreateSerializer(serializers.ModelSerializer):
             else:
                 error = {'error': 'Please load enough coins into your account'}
                 raise serializers.ValidationError(error)
+            post.amount -= amount
+            post.save()
+
         instance = super(TradeRequestCreateSerializer, self).create(validated_data)
         return instance
 
@@ -64,14 +72,16 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
+        context = self.context['request']
         if self.instance.status == 1:
             error = {'error': 'Trade request already accepted'}
             raise serializers.ValidationError(error)
+
         elif self.instance.status == 2:
             error = {'error': 'You cannot undo a rejected trade request'}
             raise serializers.ValidationError(error)
+
         instance = super(TradeRequestUpdateSerializer, self).update(instance, validated_data)
-        context = self.context['request']
         if 'status' in context.data:
             if context.data['status'] == '1':
                 instance.post.amount -= int(context.data['amount'])
@@ -81,7 +91,7 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
                 if self.instance.post.owner_role == 0:
                     user = context.user
                     user.locked -= self.instance.amount
-                    user.save()  
+                    user.save()
             return instance
 
 
