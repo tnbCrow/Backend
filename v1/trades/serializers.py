@@ -81,7 +81,7 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
                 if self.instance.post.owner_role == 0:
                     user = context.user
                     user.locked -= self.instance.amount
-                    user.save()    
+                    user.save()  
             return instance
 
 
