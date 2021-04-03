@@ -24,7 +24,7 @@ flake8 --config=.flake8 config v1
 ## Community
 Join the community to stay updated on the most recent developments, project roadmaps, and random discussions about completely unrelated topics.
 
-Discrod: https://discord.gg/szzKjqX8A4
+Discrod: https://discord.gg/F6JeuPtKRf
 
 Twitter: https://twitter.com/tnbcrow
 
