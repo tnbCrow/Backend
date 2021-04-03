@@ -55,7 +55,7 @@ class TradeRequestViewSet(
             return TradeRequestUpdateSerializer
 
     def get_permissions(self):
-        if self.action == 'create' or self.action == 'destroy':
+        if self.action == 'create':
             return [TradeRequestInitiator(), ]
         elif self.action == 'partial_update' or self.action == 'update':
             return [TradeRequestPostOwner(), ]
