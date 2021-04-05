@@ -30,6 +30,7 @@ class TradePost(models.Model):
     rate = models.IntegerField()
 
     amount = models.IntegerField()
+    payment_windows = models.TimeField()
 
     terms_of_trade = models.TextField()
     min_reputation = models.IntegerField()
