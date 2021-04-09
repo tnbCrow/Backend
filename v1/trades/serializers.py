@@ -68,7 +68,7 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradeRequest
-        fields = ('uuid', 'post', 'status', 'rate' ,'amount', 'message', 'created_at', 'updated_at')
+        fields = ('uuid', 'post', 'status', 'rate', 'amount', 'message', 'created_at', 'updated_at')
         read_only_fields = 'created_at', 'updated_at', 'post', 'amount', 'message', 'rate'
 
     @transaction.atomic

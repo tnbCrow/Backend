@@ -83,7 +83,7 @@ class ActiveTrade(models.Model):
 
     post = models.ForeignKey(TradePost, on_delete=models.CASCADE)
     initiator = models.ForeignKey(User, on_delete=models.CASCADE)
-    
+
     amount = models.IntegerField()
     rate = models.PositiveIntegerField()
 
