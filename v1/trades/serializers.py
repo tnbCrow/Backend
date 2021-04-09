@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.utils import timezone
 
 from rest_framework import serializers
 
@@ -69,15 +70,17 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = TradeRequest
         fields = ('uuid', 'post', 'status', 'rate', 'amount', 'message', 'created_at', 'updated_at', 'expires_at')
-        read_only_fields = 'created_at', 'updated_at', 'post', 'amount', 'message', 'rate', 'expires_at'
+        read_only_fields = 'uuid', 'created_at', 'updated_at', 'post', 'amount', 'message', 'rate', 'expires_at'
 
     @transaction.atomic
     def update(self, instance, validated_data):
         context = self.context['request']
-        if self.instance.status == 1:
+        if self.instance.expires_at < timezone.now():
+            error = {'error': 'OOps!! Trade request is expired'}
+            raise serializers.ValidationError(error)
+        elif self.instance.status == 1:
             error = {'error': 'Trade request already accepted'}
             raise serializers.ValidationError(error)
-
         elif self.instance.status == 2:
             error = {'error': 'You cannot undo a rejected trade request'}
             raise serializers.ValidationError(error)
@@ -93,7 +96,7 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
                     user = context.user
                     user.locked -= self.instance.amount
                     user.save()
-            return instance
+        return instance
 
 
 class ActiveTradeSerializer(serializers.ModelSerializer):
