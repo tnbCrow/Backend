@@ -66,6 +66,7 @@ class TradeRequest(models.Model):
 
     message = models.CharField(max_length=255)
     amount = models.IntegerField()
+    rate = models.PositiveIntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -82,7 +83,9 @@ class ActiveTrade(models.Model):
 
     post = models.ForeignKey(TradePost, on_delete=models.CASCADE)
     initiator = models.ForeignKey(User, on_delete=models.CASCADE)
+    
     amount = models.IntegerField()
+    rate = models.PositiveIntegerField()
 
     initiator_confirmed = models.BooleanField(default=False)
     owner_confirmed = models.BooleanField(default=False)
