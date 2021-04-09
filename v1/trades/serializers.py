@@ -35,8 +35,8 @@ class TradeRequestCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradeRequest
-        fields = ('uuid', 'post', 'amount', 'rate', 'message', 'status', 'created_at', 'updated_at')
-        read_only_fields = 'created_at', 'updated_at', 'status', 'rate'
+        fields = ('uuid', 'post', 'amount', 'rate', 'message', 'status', 'created_at', 'updated_at', 'expires_at')
+        read_only_fields = 'created_at', 'updated_at', 'status', 'rate', 'expires_at'
 
     @transaction.atomic
     def create(self, validated_data):
@@ -68,8 +68,8 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradeRequest
-        fields = ('uuid', 'post', 'status', 'rate', 'amount', 'message', 'created_at', 'updated_at')
-        read_only_fields = 'created_at', 'updated_at', 'post', 'amount', 'message', 'rate'
+        fields = ('uuid', 'post', 'status', 'rate', 'amount', 'message', 'created_at', 'updated_at', 'expires_at')
+        read_only_fields = 'created_at', 'updated_at', 'post', 'amount', 'message', 'rate', 'expires_at'
 
     @transaction.atomic
     def update(self, instance, validated_data):

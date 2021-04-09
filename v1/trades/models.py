@@ -1,5 +1,8 @@
 from uuid import uuid4
 
+from django.utils import timezone
+from datetime import timedelta
+
 from django.db import models
 
 from v1.users.models import User
@@ -72,6 +75,7 @@ class TradeRequest(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    expires_at = models.DateTimeField(default=timezone.now()+timedelta(days=1))
 
     def __str__(self):
         return f'{self.post}: {self.status}'
