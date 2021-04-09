@@ -27,9 +27,10 @@ class TradePost(models.Model):
 
     exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
     margin = models.IntegerField()
-    rate = models.IntegerField()
+    rate = models.PositiveIntegerField()
 
-    amount = models.IntegerField()
+    amount = models.PositiveIntegerField()
+    payment_windows = models.PositiveIntegerField()
 
     terms_of_trade = models.TextField()
     min_reputation = models.IntegerField()
