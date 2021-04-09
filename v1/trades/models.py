@@ -51,11 +51,13 @@ class TradeRequest(models.Model):
     PENDIGN = 0
     ACCEPTED = 1
     REJECTED = 2
+    EXPIRED = 3
 
     REQUEST_STATUS = [
         (PENDIGN, 'Pending'),
         (ACCEPTED, 'Accepted'),
-        (REJECTED, 'Rejected')
+        (REJECTED, 'Rejected'),
+        (EXPIRED, 'Expired')
     ]
 
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
