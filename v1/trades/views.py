@@ -44,7 +44,7 @@ class TradeRequestViewSet(
         for the currently authenticated user.
         """
         if self.request.method in SAFE_METHODS:
-            return TradeRequest.objects.filter(Q(initiator=self.request.user, status=0) | Q(post__owner=self.request.user, status=0))
+            return TradeRequest.objects.filter(Q(initiator=self.request.user) | Q(post__owner=self.request.user))
         else:
             return TradeRequest.objects.all()
 
@@ -63,7 +63,8 @@ class TradeRequestViewSet(
             return [IsAuthenticated(), ]
 
     def perform_create(self, serializer):
-        serializer.save(initiator=self.request.user)
+        rate = TradePost.objects.get(uuid=self.request.data['post']).rate
+        serializer.save(initiator=self.request.user, rate=rate)
 
 
 class ActiveTradeViewSet(

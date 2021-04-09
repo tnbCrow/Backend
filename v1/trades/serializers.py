@@ -35,8 +35,8 @@ class TradeRequestCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradeRequest
-        fields = ('uuid', 'post', 'amount', 'message', 'status', 'created_at', 'updated_at')
-        read_only_fields = 'created_at', 'updated_at', 'status',
+        fields = ('uuid', 'post', 'amount', 'rate', 'message', 'status', 'created_at', 'updated_at')
+        read_only_fields = 'created_at', 'updated_at', 'status', 'rate'
 
     @transaction.atomic
     def create(self, validated_data):
@@ -60,6 +60,7 @@ class TradeRequestCreateSerializer(serializers.ModelSerializer):
             post.save()
 
         instance = super(TradeRequestCreateSerializer, self).create(validated_data)
+
         return instance
 
 
@@ -67,8 +68,8 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradeRequest
-        fields = ('uuid', 'post', 'status', 'amount', 'message', 'created_at', 'updated_at')
-        read_only_fields = 'created_at', 'updated_at', 'post', 'amount', 'message'
+        fields = ('uuid', 'post', 'status', 'rate' ,'amount', 'message', 'created_at', 'updated_at')
+        read_only_fields = 'created_at', 'updated_at', 'post', 'amount', 'message', 'rate'
 
     @transaction.atomic
     def update(self, instance, validated_data):
@@ -86,7 +87,7 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
             if context.data['status'] == '1':
                 instance.post.amount -= int(context.data['amount'])
                 instance.post.save()
-                obj, created = ActiveTrade.objects.get_or_create(post=instance.post, initiator=instance.initiator, amount=instance.amount)
+                obj, created = ActiveTrade.objects.get_or_create(post=instance.post, initiator=instance.initiator, amount=instance.amount, rate=instance.rate)
             elif context.data['status'] == '2':
                 if self.instance.post.owner_role == 0:
                     user = context.user
