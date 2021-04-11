@@ -53,12 +53,14 @@ class TradeRequest(models.Model):
     PENDIGN = 0
     ACCEPTED = 1
     REJECTED = 2
-    EXPIRED = 3
+    CANCELLED = 3
+    EXPIRED = 4
 
     REQUEST_STATUS = [
         (PENDIGN, 'Pending'),
         (ACCEPTED, 'Accepted'),
         (REJECTED, 'Rejected'),
+        (CANCELLED, 'Cancelled'),
         (EXPIRED, 'Expired')
     ]
 
