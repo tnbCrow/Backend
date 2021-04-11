@@ -24,7 +24,6 @@ class TradePost(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     owner_role = models.IntegerField(choices=ROLE_CHOICES)
 
-    transaction_type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
 
@@ -72,6 +71,10 @@ class TradeRequest(models.Model):
     message = models.CharField(max_length=255)
     amount = models.IntegerField()
     rate = models.PositiveIntegerField()
+    
+    payment_windows = models.PositiveIntegerField()
+    terms_of_trade = models.TextField()
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -108,6 +111,10 @@ class ActiveTrade(models.Model):
     amount = models.IntegerField()
     rate = models.PositiveIntegerField()
     status = models.IntegerField(choices=STATUS, default=0)  # status of active trade
+    
+    payment_windows = models.PositiveIntegerField()
+    terms_of_trade = models.TextField()
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
 
     initiator_confirmed = models.BooleanField(default=False)
     owner_confirmed = models.BooleanField(default=False)
