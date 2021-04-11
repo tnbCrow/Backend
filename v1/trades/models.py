@@ -6,7 +6,7 @@ from datetime import timedelta
 from django.db import models
 
 from v1.users.models import User
-from v1.constants.models import TransactionType, Currency, PaymentMethod, Exchange
+from v1.constants.models import Currency, PaymentMethod, Exchange
 
 
 # This model is responsible to hold all the tradePost information that the user will create.
@@ -73,14 +73,14 @@ class TradeRequest(models.Model):
     message = models.CharField(max_length=255)
     amount = models.IntegerField()
     rate = models.PositiveIntegerField()
-    
+
     payment_windows = models.PositiveIntegerField()
     terms_of_trade = models.TextField()
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    expires_at = models.DateTimeField(default=timezone.now()+timedelta(days=1))
+    expires_at = models.DateTimeField(default=timezone.now() + timedelta(days=1))
 
     def __str__(self):
         return f'{self.post}: {self.status}'
@@ -113,7 +113,7 @@ class ActiveTrade(models.Model):
     amount = models.IntegerField()
     rate = models.PositiveIntegerField()
     status = models.IntegerField(choices=STATUS, default=0)  # status of active trade
-    
+
     payment_windows = models.PositiveIntegerField()
     terms_of_trade = models.TextField()
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
