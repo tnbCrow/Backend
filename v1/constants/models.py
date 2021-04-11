@@ -6,7 +6,6 @@ from django.db import models
 # Exchange model will hold the value of TNBC in different exchanges
 # that will be avaiable in future
 class Exchange(models.Model):
-    uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
     name = models.CharField(max_length=255, unique=True)
     price = models.IntegerField()
 
@@ -17,7 +16,6 @@ class Exchange(models.Model):
 # This model will contain the type of transaction that the user will use
 # Eg: Cryptocurrency, Fiat Exchange, Online Purchases
 class TransactionType(models.Model):
-    uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
     name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
@@ -28,7 +26,6 @@ class TransactionType(models.Model):
 # the TransactionType. Eg: For Crypto, it will have bitcoin, litecoin and
 # for Fiat, we will have USD, EUR and so on
 class PaymentMethod(models.Model):
-    uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
     type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
 
@@ -41,7 +38,6 @@ class PaymentMethod(models.Model):
 
 # The type of currency that the user is using to send or recieve the payment
 class Currency(models.Model):
-    uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
     name = models.CharField(max_length=255, unique=True)
 
     class Meta:
@@ -62,7 +58,6 @@ class TransactionFee(models.Model):
 
 # This model will list all the countries in the world with the alpha and phone codes
 class Country(models.Model):
-    uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
     name = models.CharField(max_length=255, unique=True)
     alpha_two_code = models.CharField(max_length=2)
     alpha_three_code = models.CharField(max_length=3)
