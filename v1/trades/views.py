@@ -12,7 +12,11 @@ from .serializers import TradePostSerializer, TradeRequestCreateSerializer, Trad
 from .permissions import TradeRequestInitiator, TradeRequestPostOwner
 
 
-class TradePostViewSet(viewsets.ModelViewSet):
+class TradePostViewSet(mixins.CreateModelMixin,
+                       mixins.RetrieveModelMixin,
+                       mixins.UpdateModelMixin,
+                       mixins.ListModelMixin,
+                       viewsets.GenericViewSet):
 
     queryset = TradePost.objects.all()
     serializer_class = TradePostSerializer
