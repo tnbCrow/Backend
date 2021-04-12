@@ -1,9 +1,12 @@
 from uuid import uuid4
 
+from django.utils import timezone
+from datetime import timedelta
+
 from django.db import models
 
 from v1.users.models import User
-from v1.constants.models import TransactionType, Currency, PaymentMethod, Exchange
+from v1.constants.models import Currency, PaymentMethod, Exchange
 
 
 # This model is responsible to hold all the tradePost information that the user will create.
@@ -21,7 +24,6 @@ class TradePost(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     owner_role = models.IntegerField(choices=ROLE_CHOICES)
 
-    transaction_type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
 
@@ -51,11 +53,13 @@ class TradeRequest(models.Model):
     PENDIGN = 0
     ACCEPTED = 1
     REJECTED = 2
+    EXPIRED = 3
 
     REQUEST_STATUS = [
         (PENDIGN, 'Pending'),
         (ACCEPTED, 'Accepted'),
-        (REJECTED, 'Rejected')
+        (REJECTED, 'Rejected'),
+        (EXPIRED, 'Expired')
     ]
 
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
@@ -68,8 +72,13 @@ class TradeRequest(models.Model):
     amount = models.IntegerField()
     rate = models.PositiveIntegerField()
 
+    payment_windows = models.PositiveIntegerField()
+    terms_of_trade = models.TextField()
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    expires_at = models.DateTimeField(default=timezone.now() + timedelta(days=1))
 
     def __str__(self):
         return f'{self.post}: {self.status}'
@@ -102,6 +111,10 @@ class ActiveTrade(models.Model):
     amount = models.IntegerField()
     rate = models.PositiveIntegerField()
     status = models.IntegerField(choices=STATUS, default=0)  # status of active trade
+
+    payment_windows = models.PositiveIntegerField()
+    terms_of_trade = models.TextField()
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
 
     initiator_confirmed = models.BooleanField(default=False)
     owner_confirmed = models.BooleanField(default=False)
