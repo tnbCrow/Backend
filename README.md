@@ -16,6 +16,13 @@ Install required packages:
 pip install -r requirements.txt
 ```
 
+Run the application:
+```shell
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+```
+
 To check styling:
 ```shell
 flake8 --config=.flake8 config v1

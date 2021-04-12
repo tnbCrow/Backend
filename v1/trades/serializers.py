@@ -84,14 +84,23 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
         elif self.instance.status == 2:
             error = {'error': 'You cannot undo a rejected trade request'}
             raise serializers.ValidationError(error)
+        elif self.instance.status == 3:
+            error = {'error': 'You cannot undo a cancelled trade request'}
+            raise serializers.ValidationError(error)
 
         instance = super(TradeRequestUpdateSerializer, self).update(instance, validated_data)
         if 'status' in context.data:
             if context.data['status'] == '1':
                 instance.post.amount -= int(context.data['amount'])
                 instance.post.save()
-                obj, created = ActiveTrade.objects.get_or_create(post=instance.post, initiator=instance.initiator, amount=instance.amount, rate=instance.rate)
-            elif context.data['status'] == '2':
+                obj, created = ActiveTrade.objects.get_or_create(post=instance.post,
+                                                                 initiator=instance.initiator,
+                                                                 amount=instance.amount,
+                                                                 rate=instance.rate,
+                                                                 payment_windows=instance.payment_windows,
+                                                                 terms_of_trade=instance.terms_of_trade,
+                                                                 payment_method=instance.payment_method)
+            elif context.data['status'] == '2' or context.data['status'] == '3':
                 if self.instance.post.owner_role == 0:
                     user = context.user
                     user.locked -= self.instance.amount
