@@ -79,6 +79,21 @@ class TradeRequest(models.Model):
 # initiator_confirmed and owner_confirmed flag will be used to confirm both parties have
 # sent and recieved the payments
 class ActiveTrade(models.Model):
+    OPEN = 0
+    COMPLETED = 1
+    ADMIN_COMPLETED = 2
+    OWNER_CANCELLED = 3
+    INITIATOR_CANCELLED = 4
+    ADMIN_CANCELLED = 5
+
+    STATUS = [
+        (OPEN, 'Open'),
+        (COMPLETED, 'Completed'),
+        (ADMIN_COMPLETED, 'Admin Completed'),
+        (OWNER_CANCELLED, 'Owner Cancelled'),
+        (INITIATOR_CANCELLED, 'Initiator Cancelled'),
+        (ADMIN_CANCELLED, 'Admin Cancelled')
+    ]
     uuid = models.UUIDField(default=uuid4, editable=False, primary_key=True)
 
     post = models.ForeignKey(TradePost, on_delete=models.CASCADE)
@@ -86,6 +101,7 @@ class ActiveTrade(models.Model):
 
     amount = models.IntegerField()
     rate = models.PositiveIntegerField()
+    status = models.IntegerField(choices=STATUS, default=0)  # status of active trade
 
     initiator_confirmed = models.BooleanField(default=False)
     owner_confirmed = models.BooleanField(default=False)
