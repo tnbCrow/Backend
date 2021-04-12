@@ -93,10 +93,13 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
             if context.data['status'] == '1':
                 instance.post.amount -= int(context.data['amount'])
                 instance.post.save()
-                obj, created = ActiveTrade.objects.get_or_create(post=instance.post, \
-                        initiator=instance.initiator, amount=instance.amount, rate=instance.rate, \
-                        payment_windows=instance.payment_windows, terms_of_trade=instance.terms_of_trade, \
-                        payment_method=instance.payment_method)
+                obj, created = ActiveTrade.objects.get_or_create(post=instance.post,
+                                                                 initiator=instance.initiator,
+                                                                 amount=instance.amount,
+                                                                 rate=instance.rate,
+                                                                 payment_windows=instance.payment_windows,
+                                                                 terms_of_trade=instance.terms_of_trade,
+                                                                 payment_method=instance.payment_method)
             elif context.data['status'] == '2' or context.data['status'] == '3':
                 if self.instance.post.owner_role == 0:
                     user = context.user

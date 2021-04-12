@@ -57,10 +57,8 @@ class TradeRequestViewSet(
     def get_permissions(self):
         if self.action == 'partial_update' or self.action == 'update':
             if self.request.data['status'] == '1' or self.request.data['status'] == '2':
-                print("Owner")
                 return [TradeRequestPostOwner(), ]
             elif self.request.data['status'] == '3':
-                print("initiator")
                 return [TradeRequestInitiator(), ]
             elif self.request.data['status'] == '4':
                 return [ReadOnly(), ]
