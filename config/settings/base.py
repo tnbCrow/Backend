@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'channels',
     'rest_framework',
     'djoser',
+    'drf_yasg',
 
     # local
     'v1.constants.apps.ConstantsConfig',
