@@ -23,6 +23,11 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+Create Super User for admin login:
+```shell
+python manage.py createsuperuser
+```
+
 To check styling:
 ```shell
 flake8 --config=.flake8 config v1
