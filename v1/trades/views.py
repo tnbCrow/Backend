@@ -93,6 +93,11 @@ class ActiveTradeViewSet(
 
     def get_permissions(self):
         data = self.request.data
+        if 'status' in data:
+            if data['status'] == '3':
+                return [TradeRequestPostOwner(), ]
+            elif data['status'] == '4':
+                return [TradeRequestInitiator(), ]
         if 'initiator_confirmed' in data and 'owner_confirmed' not in data:
             return [TradeRequestInitiator(), ]
         elif 'owner_confirmed' in data and 'initiator_confirmed' not in data:
