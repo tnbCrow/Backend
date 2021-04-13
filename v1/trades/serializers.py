@@ -1,5 +1,6 @@
 from django.db import transaction
 from django.utils import timezone
+from datetime import timedelta
 
 from rest_framework import serializers
 
@@ -112,11 +113,27 @@ class ActiveTradeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ActiveTrade
-        fields = ('uuid', 'post', 'amount', 'initiator_confirmed', 'owner_confirmed', 'created_at', 'updated_at')
+        fields = ('uuid', 'post', 'amount', 'initiator_confirmed', 'owner_confirmed', 'created_at', 'updated_at', 'status')
         read_only_fields = 'created_at', 'updated_at', 'post', 'amount'
 
     @transaction.atomic
     def update(self, instance, validated_data):
+        context = self.context['request']
+        payment_windows_expires_at = instance.created_at + timedelta(minutes=instance.payment_windows)
+
+        if self.instance.status == 1 or self.instance.status == 2 or self.instance.status == 3 or self.instance.status == 4 or self.instance.status == 5:
+            error = {'error': 'You cannot undo the action'}
+            raise serializers.ValidationError(error)
+
+        if 'status' in context.data:
+            if context.data['status'] == '1' or context.data['status'] == '2' or context.data['status'] == '5':
+                error = {'error': 'You cannot set this status'}
+                raise serializers.ValidationError(error)
+            elif payment_windows_expires_at > timezone.now():
+                if (instance.post.owner_role == 0 and context.data['status'] == '4') or (instance.post.owner_role == 1 and context.data['status'] == '3'):
+                    error = {'error': 'Payment window must expire before cancelling the ActiveTrade'}
+                    raise serializers.ValidationError(error)
+
         instance = super(ActiveTradeSerializer, self).update(instance, validated_data)
         if instance.initiator_confirmed and instance.owner_confirmed:
             if instance.post.owner_role == 0:
