@@ -1,4 +1,13 @@
+from concurrent.futures import thread
+from threading import Thread
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from v1.thread.models import ChatThread
+from channels.db import database_sync_to_async
+
+# Async Helper
+@database_sync_to_async
+def check_valid_thread(thread):
+    return ChatThread.validate_thread(thread)
 
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
@@ -11,12 +20,18 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             self.chat_room_name = self.scope['url_route']['kwargs']['chat_room']
             self.chat_group_name = f"chat_group_{self.chat_room_name}"
 
+            # Check if thread exist
+            is_valid_thread = await check_valid_thread(self.chat_room_name)
+            if not is_valid_thread: 
+                await self.close()
+                return
+            
             # Join room group
             await self.channel_layer.group_add(
                 group=self.chat_group_name,
                 channel=self.channel_name,
             )
-            print("1:", self.chat_group_name)
+
             await self.accept()
 
     # Receive message from WebSocket client

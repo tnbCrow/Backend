@@ -38,7 +38,7 @@ def get_test_thread(user1=None, user2=None):
     user1 = user1 if user1 is not None else get_test_user(manual_user="user1")[0] 
     user2 = user2 if user2 is not None else get_test_user(manual_user="user2")[0]
 
-    chat_thread = ChatThread(primary_user=user1, secondary_user=user2)
+    chat_thread = ChatThread.objects.create(primary_user=user1, secondary_user=user2)
     return chat_thread
 
 
