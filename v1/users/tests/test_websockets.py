@@ -4,8 +4,11 @@ from channels.testing import WebsocketCommunicator
 from channels.layers import get_channel_layer
 from config.asgi import application
 
+from v1.thread.models import ChatThread
+
 from .test_utils import (
-    get_test_user_async
+    get_test_user_async,
+    get_test_thread_async,
 )
 
 TEST_CHANNEL_LAYERS = {
@@ -26,9 +29,12 @@ def base_settings():
 class TestWebsocketsAuth:
     async def test_login_user_can_connect_to_wss(self, base_settings):
         user, token = await get_test_user_async()
+        print(user,type(user))
+        thread = await get_test_thread_async(user1=user)
+
         communicator = WebsocketCommunicator(
             application=application,
-            path=f'/chat/{user.uuid}/?token={token}'
+            path=f'/chat/{thread.uuid}/?token={token}'
         )
 
         connected, _ = await communicator.connect()
@@ -73,4 +79,3 @@ class TestWebsocketsChat:
         response = await communicator.receive_json_from()
         assert response == message
         await communicator.disconnect()
-        # assert 1==11
