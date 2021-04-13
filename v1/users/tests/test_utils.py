@@ -44,7 +44,7 @@ def get_test_thread(user1=None, user2=None):
 
 @database_sync_to_async
 def get_test_user_async(user_info=TEST_USER, manual_user=None):
-    return get_test_user(user_info=TEST_USER, manual_user=None)
+    return get_test_user(user_info=TEST_USER, manual_user=manual_user)
 
 @database_sync_to_async
 def get_test_thread_async(user1=None, user2=None):

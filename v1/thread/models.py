@@ -13,6 +13,13 @@ class ChatThread(models.Model):
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
+
+    def is_user_allowed(self,user):
+        if user == self.primary_user: return True
+        if user == self.secondary_user: return True
+        if user == self.admin_user: return True
+        return False
+
     def validate_thread(thread_ud):
         thread  = ChatThread.objects.filter(uuid=thread_ud).first()
         if thread is not None:
