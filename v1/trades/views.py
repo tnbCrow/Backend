@@ -1,6 +1,6 @@
 from rest_framework import viewsets, mixins, status, serializers
 from rest_framework.permissions import IsAuthenticated, AllowAny, SAFE_METHODS
-from rest_framework.decorators import action, permission_classes
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from django.db.models import Q
