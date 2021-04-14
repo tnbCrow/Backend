@@ -1,6 +1,7 @@
-from rest_framework import viewsets
-from rest_framework import mixins
+from rest_framework import viewsets, mixins, status, serializers
 from rest_framework.permissions import IsAuthenticated, AllowAny, SAFE_METHODS
+from rest_framework.decorators import action, permission_classes
+from rest_framework.response import Response
 
 from django.db.models import Q
 
@@ -8,7 +9,8 @@ from v1.constants.models import Exchange
 from v1.third_party.tnbCrow.permissions import IsOwner, ReadOnly
 
 from .models import TradePost, TradeRequest, ActiveTrade
-from .serializers import TradePostSerializer, TradeRequestCreateSerializer, TradeRequestUpdateSerializer, ActiveTradeSerializer
+from .serializers import TradePostSerializer, TradeRequestCreateSerializer,\
+    TradeRequestUpdateSerializer, ActiveTradeSerializer, AmountSerializer
 from .permissions import TradeRequestInitiator, TradeRequestPostOwner
 
 
@@ -33,6 +35,31 @@ class TradePostViewSet(mixins.CreateModelMixin,
         exchange_price = Exchange.objects.get(uuid=self.request.data['exchange']).price
         rate = exchange_price * (100 + int(self.request.data['margin'])) / 100
         serializer.save(owner=self.request.user, rate=rate)
+
+    @action(methods=['post'], detail=True)
+    def load(self, request, **kwargs):
+
+        obj = self.get_object()
+
+        # self.serializer_class = AmountSerializer
+        serializer = AmountSerializer(data=request.data)
+
+        if serializer.is_valid():
+            if obj.owner_role == 1:
+                if request.user.get_user_balance() > int(request.data['amount']):
+                    request.user.locked += int(request.data['amount'])
+                    obj.amount += int(request.data['amount'])
+                    obj.save()
+                    request.user.save()
+                else:
+                    error = {'error': 'You donot have enough balance to load!!'}
+                    raise serializers.ValidationError(error)
+            else:
+                obj.amount += int(request.data['amount'])
+                obj.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TradeRequestViewSet(
