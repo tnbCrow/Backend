@@ -60,6 +60,7 @@ class TradePostViewSet(mixins.CreateModelMixin,
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     @action(methods=['post'], detail=True)
     def withdraw(self, request, **kwargs):
 
