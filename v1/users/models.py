@@ -25,6 +25,9 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
+    def get_user_balance(self):
+        return self.loaded - self.locked
+
 
 # Assigns the users with their respective wallets.
 # M-T-O with User model
