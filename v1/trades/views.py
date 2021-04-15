@@ -61,6 +61,31 @@ class TradePostViewSet(mixins.CreateModelMixin,
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(methods=['post'], detail=True)
+    def withdraw(self, request, **kwargs):
+
+        obj = self.get_object()
+
+        # self.serializer_class = AmountSerializer
+        serializer = AmountSerializer(data=request.data)
+
+        if serializer.is_valid():
+            if obj.amount >= int(request.data['amount']):
+                if obj.owner_role == 1:
+                    request.user.locked -= int(request.data['amount'])
+                    obj.amount -= int(request.data['amount'])
+                    obj.save()
+                    request.user.save()
+                else:
+                    obj.amount -= int(request.data['amount'])
+                    obj.save()
+            else:
+                error = {'error': 'Trade Post donot have enough coins to withdraw!!'}
+                raise serializers.ValidationError(error)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class TradeRequestViewSet(
         mixins.CreateModelMixin,
