@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, SAFE_METHODS
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from django.utils import timezone
 from django.db.models import Q
 
 from v1.constants.models import Exchange
@@ -100,7 +101,14 @@ class TradeRequestViewSet(
         for the currently authenticated user.
         """
         if self.request.method in SAFE_METHODS:
-            return TradeRequest.objects.filter(Q(initiator=self.request.user) | Q(post__owner=self.request.user))
+            trade_requests = TradeRequest.objects.filter(Q(initiator=self.request.user) | Q(post__owner=self.request.user))
+            expired_requests = trade_requests.filter(expires_at__lte=timezone.now())
+            expired_requests.update(status=4)
+            for request in expired_requests:
+                if request.post.owner_role == 0:
+                    request.initiator.locked -= request.amount
+                    request.initiator.save()
+            return trade_requests
         else:
             return TradeRequest.objects.all()
 
