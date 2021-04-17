@@ -15,6 +15,7 @@ cryptography==3.4.6
 daphne==3.0.1
 defusedxml==0.7.1
 Django==3.1.7
+django-debug-toolbar==3.2.1
 django-templated-mail==1.1.1
 djangorestframework==3.12.2
 djangorestframework-simplejwt==4.6.0
@@ -30,6 +31,7 @@ importlib-metadata==1.7.0
 incremental==21.3.0
 inflection==0.5.1
 iniconfig==1.1.1
+iptools==0.7.0
 itypes==1.2.0
 Jinja2==2.11.3
 MarkupSafe==1.1.1
