@@ -88,6 +88,9 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
         elif self.instance.status == 3:
             error = {'error': 'You cannot undo a cancelled trade request'}
             raise serializers.ValidationError(error)
+        elif self.instance.status == 4:
+            error = {'error': 'You cannot undo a expired trade request'}
+            raise serializers.ValidationError(error)
 
         instance = super(TradeRequestUpdateSerializer, self).update(instance, validated_data)
         if 'status' in context.data:
