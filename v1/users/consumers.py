@@ -1,19 +1,20 @@
-from concurrent.futures import thread
-from threading import Thread
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from v1.thread.models import ChatThread
 from channels.db import database_sync_to_async
+
 
 # Async Helper
 @database_sync_to_async
 def check_valid_thread(thread):
     return ChatThread.validate_thread(thread)
 
+
 @database_sync_to_async
 def check_user_can_join_thread(user, thread_id):
     assert ChatThread.validate_thread(thread_id)
     thread = ChatThread.objects.get(uuid=thread_id)
     return thread.is_user_allowed(user)
+
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -27,17 +28,16 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
             # Check if thread exist
             is_valid_thread = await check_valid_thread(self.chat_room_name)
-            if not is_valid_thread: 
+            if not is_valid_thread:
                 await self.close()
                 return
 
             # Check if user authorized to join the thread
-            is_user_allowed = await check_user_can_join_thread(user,self.chat_room_name)
-            print("User was",is_user_allowed)
-            if not is_user_allowed: 
+            is_user_allowed = await check_user_can_join_thread(user, self.chat_room_name)
+            if not is_user_allowed:
                 await self.close()
                 return
-            
+
             # Join room group
             await self.channel_layer.group_add(
                 group=self.chat_group_name,
