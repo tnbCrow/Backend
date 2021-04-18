@@ -51,7 +51,7 @@ class TradeRequestCreateSerializer(serializers.ModelSerializer):
 
         user = context.user
         post = self.validated_data['post']
-        if post.owner_role == 0:
+        if post.owner_role == TradePost.BUYER:
             if user.get_user_balance() >= amount:
                 user.locked += amount
                 user.save()
@@ -79,22 +79,22 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
         if self.instance.expires_at < timezone.now():
             error = {'error': 'OOps!! Trade request is expired'}
             raise serializers.ValidationError(error)
-        elif self.instance.status == 1:
+        elif self.instance.status == TradeRequest.ACCEPTED:
             error = {'error': 'Trade request already accepted'}
             raise serializers.ValidationError(error)
-        elif self.instance.status == 2:
+        elif self.instance.status == TradeRequest.REJECTED:
             error = {'error': 'You cannot undo a rejected trade request'}
             raise serializers.ValidationError(error)
-        elif self.instance.status == 3:
+        elif self.instance.status == TradeRequest.CANCELLED:
             error = {'error': 'You cannot undo a cancelled trade request'}
             raise serializers.ValidationError(error)
-        elif self.instance.status == 4:
+        elif self.instance.status == TradeRequest.EXPIRED:
             error = {'error': 'You cannot undo a expired trade request'}
             raise serializers.ValidationError(error)
 
         instance = super(TradeRequestUpdateSerializer, self).update(instance, validated_data)
         if 'status' in context.data:
-            if context.data['status'] == '1':
+            if context.data['status'] == str(TradeRequest.ACCEPTED):
                 instance.post.amount -= int(context.data['amount'])
                 instance.post.save()
                 obj, created = ActiveTrade.objects.get_or_create(post=instance.post,
@@ -104,8 +104,8 @@ class TradeRequestUpdateSerializer(serializers.ModelSerializer):
                                                                  payment_windows=instance.payment_windows,
                                                                  terms_of_trade=instance.terms_of_trade,
                                                                  payment_method=instance.payment_method)
-            elif context.data['status'] == '2' or context.data['status'] == '3':
-                if self.instance.post.owner_role == 0:
+            elif context.data['status'] == str(TradeRequest.REJECTED) or context.data['status'] == str(TradeRequest.CANCELLED):
+                if self.instance.post.owner_role == TradePost.BUYER:
                     user = context.user
                     user.locked -= self.instance.amount
                     user.save()
@@ -124,22 +124,22 @@ class ActiveTradeSerializer(serializers.ModelSerializer):
         context = self.context['request']
         payment_windows_expires_at = instance.created_at + timedelta(minutes=instance.payment_windows)
 
-        if self.instance.status == 1 or self.instance.status == 2 or self.instance.status == 3 or self.instance.status == 4 or self.instance.status == 5:
+        if self.instance.status == ActiveTrade.COMPLETED or self.instance.status == ActiveTrade.ADMIN_COMPLETED or self.instance.status == ActiveTrade.OWNER_CANCELLED or self.instance.status == ActiveTrade.INITIATOR_CANCELLED or self.instance.status == ActiveTrade.ADMIN_CANCELLED:
             error = {'error': 'You cannot undo the action'}
             raise serializers.ValidationError(error)
 
         if 'status' in context.data:
-            if context.data['status'] == '1' or context.data['status'] == '2' or context.data['status'] == '5':
+            if context.data['status'] == str(ActiveTrade.COMPLETED) or context.data['status'] == str(ActiveTrade.ADMIN_COMPLETED) or context.data['status'] == str(ActiveTrade.ADMIN_CANCELLED):
                 error = {'error': 'You cannot set this status'}
                 raise serializers.ValidationError(error)
             elif payment_windows_expires_at > timezone.now():
-                if (instance.post.owner_role == 0 and context.data['status'] == '4') or (instance.post.owner_role == 1 and context.data['status'] == '3'):
+                if (instance.post.owner_role == TradePost.BUYER and context.data['status'] == str(ActiveTrade.INITIATOR_CANCELLED)) or (instance.post.owner_role == TradePost.SELLER and context.data['status'] == str(ActiveTrade.OWNER_CANCELLED)):
                     error = {'error': 'Payment window must expire before cancelling the ActiveTrade'}
                     raise serializers.ValidationError(error)
 
         instance = super(ActiveTradeSerializer, self).update(instance, validated_data)
         if instance.initiator_confirmed and instance.owner_confirmed:
-            if instance.post.owner_role == 0:
+            if instance.post.owner_role == TradePost.BUYER:
                 buyer = instance.post.owner
                 seller = instance.initiator
             else:
