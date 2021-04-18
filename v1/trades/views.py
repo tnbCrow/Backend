@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, SAFE_METHODS
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from django.utils import timezone
 from django.db.models import Q
 
 from v1.constants.models import Exchange
@@ -45,7 +46,7 @@ class TradePostViewSet(mixins.CreateModelMixin,
         serializer = AmountSerializer(data=request.data)
 
         if serializer.is_valid():
-            if obj.owner_role == 1:
+            if obj.owner_role == TradePost.SELLER:
                 if request.user.get_user_balance() > int(request.data['amount']):
                     request.user.locked += int(request.data['amount'])
                     obj.amount += int(request.data['amount'])
@@ -71,7 +72,7 @@ class TradePostViewSet(mixins.CreateModelMixin,
 
         if serializer.is_valid():
             if obj.amount >= int(request.data['amount']):
-                if obj.owner_role == 1:
+                if obj.owner_role == TradePost.SELLER:
                     request.user.locked -= int(request.data['amount'])
                     obj.amount -= int(request.data['amount'])
                     obj.save()
@@ -100,7 +101,14 @@ class TradeRequestViewSet(
         for the currently authenticated user.
         """
         if self.request.method in SAFE_METHODS:
-            return TradeRequest.objects.filter(Q(initiator=self.request.user) | Q(post__owner=self.request.user))
+            trade_requests = TradeRequest.objects.filter(Q(initiator=self.request.user) | Q(post__owner=self.request.user))
+            expired_requests = trade_requests.filter(expires_at__lte=timezone.now())
+            expired_requests.update(status=TradeRequest.EXPIRED)
+            for request in expired_requests:
+                if request.post.owner_role == TradePost.BUYER:
+                    request.initiator.locked -= request.amount
+                    request.initiator.save()
+            return trade_requests
         else:
             return TradeRequest.objects.all()
 
@@ -112,11 +120,11 @@ class TradeRequestViewSet(
 
     def get_permissions(self):
         if self.action == 'partial_update' or self.action == 'update':
-            if self.request.data['status'] == '1' or self.request.data['status'] == '2':
+            if self.request.data['status'] == str(TradeRequest.ACCEPTED) or self.request.data['status'] == str(TradeRequest.REJECTED):
                 return [TradeRequestPostOwner(), ]
-            elif self.request.data['status'] == '3':
+            elif self.request.data['status'] == str(TradeRequest.CANCELLED):
                 return [TradeRequestInitiator(), ]
-            elif self.request.data['status'] == '4':
+            elif self.request.data['status'] == str(TradeRequest.EXPIRED):
                 return [ReadOnly(), ]
             else:
                 return [IsAuthenticated(), ]
@@ -146,9 +154,9 @@ class ActiveTradeViewSet(
     def get_permissions(self):
         data = self.request.data
         if 'status' in data:
-            if data['status'] == '3':
+            if data['status'] == str(ActiveTrade.OWNER_CANCELLED):
                 return [TradeRequestPostOwner(), ]
-            elif data['status'] == '4':
+            elif data['status'] == str(ActiveTrade.INITIATOR_CANCELLED):
                 return [TradeRequestInitiator(), ]
         if 'initiator_confirmed' in data and 'owner_confirmed' not in data:
             return [TradeRequestInitiator(), ]
