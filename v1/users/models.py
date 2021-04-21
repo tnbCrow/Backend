@@ -20,6 +20,9 @@ class User(AbstractUser):
     loaded = models.IntegerField(default=0)  # total coins loaded to the account
     locked = models.IntegerField(default=0)  # coins locked when creating tradePost or tradeRequest
 
+    total_coins_bought = models.IntegerField(default=0)
+    total_coins_sold = models.IntegerField(default=0)
+
     reputation = models.IntegerField(default=100)
 
     USERNAME_FIELD = 'email'
