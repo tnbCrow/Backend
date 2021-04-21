@@ -6,7 +6,7 @@ from datetime import timedelta
 from django.db import models
 
 from v1.users.models import User
-from v1.constants.models import Currency, PaymentMethod, Exchange
+from v1.constants.models import Currency, PaymentMethod
 
 
 # This model is responsible to hold all the tradePost information that the user will create.
@@ -26,9 +26,6 @@ class TradePost(models.Model):
 
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
-
-    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
-    margin = models.IntegerField()
     rate = models.PositiveIntegerField()
 
     amount = models.PositiveIntegerField()

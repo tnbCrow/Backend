@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from django.utils import timezone
 from django.db.models import Q
 
-from v1.constants.models import Exchange
 from v1.third_party.tnbCrow.permissions import IsOwner, ReadOnly
 
 from .models import TradePost, TradeRequest, ActiveTrade
@@ -33,9 +32,7 @@ class TradePostViewSet(mixins.CreateModelMixin,
             return [IsOwner(), ]
 
     def perform_create(self, serializer):
-        exchange_price = Exchange.objects.get(uuid=self.request.data['exchange']).price
-        rate = exchange_price * (100 + int(self.request.data['margin'])) / 100
-        serializer.save(owner=self.request.user, rate=rate)
+        serializer.save(owner=self.request.user)
 
     @action(methods=['post'], detail=True)
     def load(self, request, **kwargs):
