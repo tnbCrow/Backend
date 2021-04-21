@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.db.models import Q
 
 from v1.third_party.tnbCrow.permissions import IsOwner, ReadOnly
+from v1.constants.models import TransactionFee
 
 from .models import TradePost, TradeRequest, ActiveTrade
 from .serializers import TradePostSerializer, TradeRequestCreateSerializer,\
@@ -43,17 +44,21 @@ class TradePostViewSet(mixins.CreateModelMixin,
         serializer = AmountSerializer(data=request.data)
 
         if serializer.is_valid():
+            amount = int(request.data['amount'])
             if obj.owner_role == TradePost.SELLER:
-                if request.user.get_user_balance() > int(request.data['amount']):
-                    request.user.locked += int(request.data['amount'])
-                    obj.amount += int(request.data['amount'])
+                if request.user.get_user_balance() > amount:
+                    request.user.locked += amount
+                    fee_percentage = TransactionFee.objects.get(id=1).charge / 100
+                    transaction_fee = int(amount * fee_percentage / 100)
+                    final_amount = amount - transaction_fee
+                    obj.amount += final_amount
                     obj.save()
                     request.user.save()
                 else:
                     error = {'error': 'You donot have enough balance to load!!'}
                     raise serializers.ValidationError(error)
             else:
-                obj.amount += int(request.data['amount'])
+                obj.amount += amount
                 obj.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
