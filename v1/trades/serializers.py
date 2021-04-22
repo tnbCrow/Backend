@@ -4,6 +4,8 @@ from datetime import timedelta
 
 from rest_framework import serializers
 
+from v1.constants.models import TransactionFee
+
 from .models import TradePost, TradeRequest, ActiveTrade, CompletedTrade
 
 
@@ -12,23 +14,33 @@ class TradePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = TradePost
         fields = ('uuid', 'owner_role', 'currency',
-                  'payment_method', 'exchange', 'margin',
+                  'payment_method',
                   'rate', 'amount', 'terms_of_trade', 'min_reputation',
-                  'broadcast_trade', 'is_active', 'created_at', 'updated_at')
-        read_only_fields = 'created_at', 'updated_at', 'rate',
+                  'broadcast_trade', 'payment_windows', 'is_active', 'created_at', 'updated_at')
+        read_only_fields = 'created_at', 'updated_at',
 
     @transaction.atomic
     def create(self, validated_data):
         context = self.context['request']
-        user = context.user
-        amount = int(context.data['amount'])
-        if context.data['owner_role'] == '1':
-            if user.get_user_balance() >= amount:
-                user.locked += amount
-                user.save()
+
+        amount = int(validated_data.pop('amount'))  # amount of coins that the user passes in
+
+        # if role's seller, check if they have enough balance. If has enough balance, get the fee percentage,
+        # calculate the transaction_fee and determine the post_amount enforcing the fee.
+        if context.data['owner_role'] == str(TradePost.SELLER):
+            if context.user.get_user_balance() >= amount:
+                fee_percentage = TransactionFee.objects.get(id=1).charge / 100
+                transaction_fee = int(amount * fee_percentage / 100)
+                post_amount = amount - transaction_fee
+                validated_data['amount'] = post_amount
+                context.user.locked += amount
+                context.user.save()
             else:
                 error = {'error': 'Please load enough coins into your account'}
                 raise serializers.ValidationError(error)
+        # If the role is buyer, pass in the amount with no fees.
+        else:
+            validated_data['amount'] = amount
         instance = super(TradePostSerializer, self).create(validated_data)
         return instance
 
