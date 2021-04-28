@@ -35,6 +35,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('v1.third_party.rest_framework_simplejwt.urls')),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('payments/', include('v1.payments.urls'))
 ]
 
 router = DefaultRouter(trailing_slash=False)

@@ -1,5 +1,11 @@
-from . import views
-from rest_framework.routers import SimpleRouter
+from django.urls import path
 
-router = SimpleRouter(trailing_slash=False)
-router.register('wallets', views.WalletViewSet, basename='wallet')
+from rest_framework.urlpatterns import format_suffix_patterns
+
+from . import views
+
+urlpatterns = [
+    path('chain-scan/', views.ChainScan.as_view()),
+]
+
+urlpatterns = format_suffix_patterns(urlpatterns)
