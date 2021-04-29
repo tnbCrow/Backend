@@ -112,6 +112,7 @@ class TestWebsocketsChat:
         await communicator.connect()
         message = {
             'type': 'chat.message',
+            'sender': str(user.uuid),
             'data': 'This is a test message.',
         }
 

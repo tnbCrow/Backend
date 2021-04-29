@@ -19,7 +19,6 @@ def check_user_can_join_thread(user, thread_id):
 class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         user = self.scope['user']
-
         if user.is_anonymous:
             await self.close()
         else:
@@ -44,21 +43,19 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 channel=self.channel_name,
             )
 
+            self.user_id = user.uuid
+
             await self.accept()
 
     # Receive message from WebSocket client
     async def receive_json(self, content, **kwargs):
-        print("got message")
-        print(self.chat_group_name)
-        # message_type = content.get('type')
+        # add the sender info
+        content["sender"] = str(self.user_id)
 
         # send the message to the group
         await self.channel_layer.group_send(
             self.chat_group_name,
-            {
-                'type': 'chat_message',
-                'message': content.get('message'),
-            }
+            content,
         )
 
     # Receive message from the group
