@@ -11,6 +11,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', os.urandom(24))
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
+
 
 # Application definition
 
@@ -28,16 +30,19 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'drf_yasg',
+    'corsheaders',
 
     # local
     'v1.constants.apps.ConstantsConfig',
     'v1.users.apps.UsersConfig',
     'v1.thread.apps.ThreadConfig',
     'v1.trades.apps.TradesConfig',
-    'v1.verification.apps.VerificationConfig'
+    'v1.verification.apps.VerificationConfig',
+
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
