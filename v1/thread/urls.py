@@ -1,7 +1,6 @@
 from django.urls import path
 from .views import ThreadView
 
-print("ram")
 app_name = 'thread'
 urlpatterns = [
     path('', ThreadView.as_view({'get': 'list'}), name='thread_list'),
