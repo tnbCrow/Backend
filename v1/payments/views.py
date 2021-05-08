@@ -20,17 +20,18 @@ class ChainScan(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, format=None):
-        scan_tracker = ChainScanTracker.objects.get(id=1)
+        scan_tracker = ChainScanTracker.objects.filter(id=1)
         next_url = TRANSACTION_URL
         while next_url:
             r = requests.get(TRANSACTION_URL).json()
             next_url = r['next']
             for transaction in r['results']:
                 transaction_time = timezone.make_aware(datetime.strptime(transaction['block']['modified_date'], '%Y-%m-%dT%H:%M:%S.%fZ'))
-                if scan_tracker.updated_at < transaction_time:
+                if scan_tracker.first().updated_at < transaction_time:
                     print(transaction['memo'])
                     print(transaction['amount'])
                 else:
                     next_url = None
                     break
+        scan_tracker.update(updated_at=timezone.now())
         return Response(status=status.HTTP_201_CREATED)
