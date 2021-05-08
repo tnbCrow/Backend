@@ -5,8 +5,6 @@ from rest_framework.test import APITestCase
 from rest_framework.reverse import reverse
 from django.contrib.auth import get_user_model
 from rest_framework import status
-
-
 from .test_utils import TEST_USER, TEST_PASS
 
 

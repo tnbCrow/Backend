@@ -22,6 +22,11 @@ python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 ```
+Run the application with Docker:
+<br>( You need to have [Docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/install/) installed )
+```shell
+docker-compose up # add -d to detach from console
+```
 
 Create Super User for admin login:
 ```shell
