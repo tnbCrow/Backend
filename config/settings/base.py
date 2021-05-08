@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'v1.thread.apps.ThreadConfig',
     'v1.trades.apps.TradesConfig',
     'v1.verification.apps.VerificationConfig',
-
+    'v1.payments.apps.PaymentsConfig'
 ]
 
 MIDDLEWARE = [

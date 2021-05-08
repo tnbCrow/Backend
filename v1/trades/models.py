@@ -77,7 +77,7 @@ class TradeRequest(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    expires_at = models.DateTimeField(default=timezone.now() + timedelta(days=1))
+    expires_at = models.DateTimeField()
 
     def __str__(self):
         return f'{self.post}: {self.status}'
@@ -142,3 +142,18 @@ class CompletedTrade(models.Model):
 
     def __str__(self):
         return f'{self.seller} - {self.buyer}: {self.amount}'
+
+
+# add expires at field after trade request is created
+def add_expires_at(instance):
+    expiry_time = timezone.now() + timedelta(days=1)
+    return expiry_time
+
+
+def pre_save_post_receiver(sender, instance, *args, **kwargs):
+    if not instance.expiry_time:
+        instance.expiry_time = add_expires_at(instance)
+
+
+# save the expiry_time before the TradeRequest model is saved
+models.signals.pre_save.connect(pre_save_post_receiver, sender=TradeRequest)

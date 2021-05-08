@@ -73,14 +73,17 @@ class TradePostViewSet(mixins.CreateModelMixin,
         serializer = AmountSerializer(data=request.data)
 
         if serializer.is_valid():
-            if obj.amount >= int(request.data['amount']):
+            amount = int(request.data['amount'])
+            if obj.amount >= amount:
                 if obj.owner_role == TradePost.SELLER:
-                    request.user.locked -= int(request.data['amount'])
-                    obj.amount -= int(request.data['amount'])
+                    fee_percentage = TransactionFee.objects.get(id=1).charge / 100
+                    final_amount = (amount * 100) / (100 - fee_percentage)
+                    request.user.locked -= final_amount
+                    obj.amount -= amount
                     obj.save()
                     request.user.save()
                 else:
-                    obj.amount -= int(request.data['amount'])
+                    obj.amount -= amount
                     obj.save()
             else:
                 error = {'error': 'Trade Post donot have enough coins to withdraw!!'}
