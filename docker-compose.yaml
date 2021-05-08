@@ -4,7 +4,9 @@ services:
     image: redis:5
   web:
     build: . # Current directory!
-    command: python3 manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "python3 manage.py migrate --noinput &&
+            python3 manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/code
     ports:
